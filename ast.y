@@ -7,6 +7,7 @@
 extern int yylex();
 extern int yyerror();
 Node *top, *tmp1, *tmp2, *tmp3, *tmp4,tmp;  //抽象構文木のルートノードへのポインタ、tmp1：追加分，関数の引数の型に合わせるため
+Node *tmp5; //define用
 %}
 %union{
     Node* np;
@@ -28,7 +29,7 @@ program : declarations statements {top=build_child(Pro_AST,$1,$2);}
 declarations : decl_statement declarations {$$=build_child(Decl_AST,$1,$2);}
 | decl_statement {$$=build_1_child(Decl_AST,$1);}
 
-decl_statement: DEFINE IDENT SEMIC {$$=build_ident_node(DEFINE_AST,$2);} //ident_AST -> Decl_stmt_ASTに変えた
+decl_statement: DEFINE IDENT SEMIC {tmp5=build_ident_node(IDENT_AST,$2); $$=build_1_child(DEFINE_AST,tmp5);} //build_1_child　追加
 | ARRAY IDENT L_BRACKET NUMBER R_BRACKET SEMIC {$$=build_array_node(ARRAY_AST,$2,$4);}
 ;
 statements : statement statements {$$=build_child(Stmts_AST,$1,$2);}
@@ -82,7 +83,7 @@ cond_op : EQ | EQ ASSIGN| LT | LT ASSIGN | GT
 
 int main(void){
     FILE *fp;
-    char str[] ="\
+    /* char str[] ="                                                    \
     INITIAL_GP = 0x10008000     # initial value of global pointer \n\
     INITIAL_SP = 0x7ffffffc     # initial value of stack pointer \n\
     # system call service number \n\
@@ -108,19 +109,15 @@ stop:                   # if syscall return  \n\
     nop             # (delay slot) \n\
  \n\
     .text 	0x00001000";
-
+*/
     if(yyparse()){
         fprintf(stderr,"Error\n");
         return 1;
     }
 
-    if((fp=fopen("test.asm","w"))==NULL){
-        fprintf(stderr, "ファイルのオープンに失敗しました.\n");
-        exit(1);    
-    }
-    fprintf(fp,"%s\n",str);
+    fp=fopen("test.asm","w")
+
     printTree(top,fp);
-    fprintf(fp,"\n");
     fclose(fp);
     return 0;
 }

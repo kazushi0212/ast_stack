@@ -61,6 +61,7 @@ Node *build_num_node(NType t,int n);
 Node *build_ident_node(NType t,char *str);
 Node *build_array_node(NType t,char *str,int n);
 void printTree(Node *p,FILE *fp);
+void checkNode(Node *p,FILE *fp);
 
 
 

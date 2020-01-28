@@ -72,8 +72,9 @@
 extern int yylex();
 extern int yyerror();
 Node *top, *tmp1, *tmp2, *tmp3, *tmp4,tmp;  //抽象構文木のルートノードへのポインタ、tmp1：追加分，関数の引数の型に合わせるため
+Node *tmp5; //define用
 
-#line 77 "ast.tab.c" /* yacc.c:339  */
+#line 78 "ast.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -139,14 +140,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 11 "ast.y" /* yacc.c:355  */
+#line 12 "ast.y" /* yacc.c:355  */
 
     Node* np;
     int ival;
     char* sp;
  
 
-#line 150 "ast.tab.c" /* yacc.c:355  */
+#line 151 "ast.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -163,7 +164,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 167 "ast.tab.c" /* yacc.c:358  */
+#line 168 "ast.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -463,10 +464,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    26,    26,    28,    29,    31,    32,    34,    35,    37,
-      38,    39,    41,    42,    44,    45,    46,    49,    50,    51,
-      52,    55,    56,    59,    60,    61,    64,    68,    69,    72,
-      73,    74
+       0,    27,    27,    29,    30,    32,    33,    35,    36,    38,
+      39,    40,    42,    43,    45,    46,    47,    50,    51,    52,
+      53,    56,    57,    60,    61,    62,    65,    69,    70,    73,
+      74,    75
 };
 #endif
 
@@ -1282,187 +1283,187 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 26 "ast.y" /* yacc.c:1646  */
+#line 27 "ast.y" /* yacc.c:1646  */
     {top=build_child(Pro_AST,(yyvsp[-1].np),(yyvsp[0].np));}
-#line 1288 "ast.tab.c" /* yacc.c:1646  */
+#line 1289 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 28 "ast.y" /* yacc.c:1646  */
+#line 29 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_child(Decl_AST,(yyvsp[-1].np),(yyvsp[0].np));}
-#line 1294 "ast.tab.c" /* yacc.c:1646  */
+#line 1295 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 29 "ast.y" /* yacc.c:1646  */
+#line 30 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_1_child(Decl_AST,(yyvsp[0].np));}
-#line 1300 "ast.tab.c" /* yacc.c:1646  */
+#line 1301 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 31 "ast.y" /* yacc.c:1646  */
-    {(yyval.np)=build_ident_node(DEFINE_AST,(yyvsp[-1].sp));}
-#line 1306 "ast.tab.c" /* yacc.c:1646  */
+#line 32 "ast.y" /* yacc.c:1646  */
+    {tmp5=build_ident_node(IDENT_AST,(yyvsp[-1].sp)); (yyval.np)=build_1_child(DEFINE_AST,tmp5);}
+#line 1307 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 32 "ast.y" /* yacc.c:1646  */
+#line 33 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_array_node(ARRAY_AST,(yyvsp[-4].sp),(yyvsp[-2].ival));}
-#line 1312 "ast.tab.c" /* yacc.c:1646  */
+#line 1313 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 34 "ast.y" /* yacc.c:1646  */
+#line 35 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_child(Stmts_AST,(yyvsp[-1].np),(yyvsp[0].np));}
-#line 1318 "ast.tab.c" /* yacc.c:1646  */
+#line 1319 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 35 "ast.y" /* yacc.c:1646  */
+#line 36 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_1_child(Stmts_AST,(yyvsp[0].np));}
-#line 1324 "ast.tab.c" /* yacc.c:1646  */
+#line 1325 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 37 "ast.y" /* yacc.c:1646  */
+#line 38 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_1_child(Stmt_AST,(yyvsp[0].np));}
-#line 1330 "ast.tab.c" /* yacc.c:1646  */
+#line 1331 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 38 "ast.y" /* yacc.c:1646  */
+#line 39 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_1_child(Stmt_AST,(yyvsp[0].np));}
-#line 1336 "ast.tab.c" /* yacc.c:1646  */
+#line 1337 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 39 "ast.y" /* yacc.c:1646  */
+#line 40 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_1_child(Stmt_AST,(yyvsp[0].np));}
-#line 1342 "ast.tab.c" /* yacc.c:1646  */
+#line 1343 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 41 "ast.y" /* yacc.c:1646  */
+#line 42 "ast.y" /* yacc.c:1646  */
     {tmp2=build_ident_node(IDENT_AST,(yyvsp[-3].sp)); (yyval.np)=build_child(ASSIGN_AST,tmp2,(yyvsp[-1].np));}
-#line 1348 "ast.tab.c" /* yacc.c:1646  */
+#line 1349 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 42 "ast.y" /* yacc.c:1646  */
+#line 43 "ast.y" /* yacc.c:1646  */
     {tmp3=build_ident_node(IDENT_AST,(yyvsp[-6].sp)); tmp4= build_num_node(NUM_AST,(yyvsp[-4].ival)); (yyval.np)=build_3_child(ASSIGN_AST,tmp3,tmp4,(yyvsp[-1].np));}
-#line 1354 "ast.tab.c" /* yacc.c:1646  */
+#line 1355 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 44 "ast.y" /* yacc.c:1646  */
+#line 45 "ast.y" /* yacc.c:1646  */
     {(yyval.np) = build_child(ADD_AST,(yyvsp[-2].np),(yyvsp[0].np));}
-#line 1360 "ast.tab.c" /* yacc.c:1646  */
+#line 1361 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 45 "ast.y" /* yacc.c:1646  */
+#line 46 "ast.y" /* yacc.c:1646  */
     {(yyval.np) = build_child(SUB_AST,(yyvsp[-2].np),(yyvsp[0].np));}
-#line 1366 "ast.tab.c" /* yacc.c:1646  */
+#line 1367 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 46 "ast.y" /* yacc.c:1646  */
+#line 47 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_1_child(Expr_AST,(yyvsp[0].np));}
-#line 1372 "ast.tab.c" /* yacc.c:1646  */
+#line 1373 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 49 "ast.y" /* yacc.c:1646  */
+#line 50 "ast.y" /* yacc.c:1646  */
     {(yyval.np) = build_child(MUL_AST,(yyvsp[-2].np),(yyvsp[0].np));}
-#line 1378 "ast.tab.c" /* yacc.c:1646  */
+#line 1379 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 50 "ast.y" /* yacc.c:1646  */
+#line 51 "ast.y" /* yacc.c:1646  */
     {(yyval.np) = build_child(DIV_AST,(yyvsp[-2].np),(yyvsp[0].np));}
-#line 1384 "ast.tab.c" /* yacc.c:1646  */
+#line 1385 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 51 "ast.y" /* yacc.c:1646  */
+#line 52 "ast.y" /* yacc.c:1646  */
     {(yyval.np) = build_child(MOD_AST,(yyvsp[-2].np),(yyvsp[0].np));}
-#line 1390 "ast.tab.c" /* yacc.c:1646  */
+#line 1391 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 52 "ast.y" /* yacc.c:1646  */
+#line 53 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_1_child(Term_AST,(yyvsp[0].np));}
-#line 1396 "ast.tab.c" /* yacc.c:1646  */
+#line 1397 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 55 "ast.y" /* yacc.c:1646  */
+#line 56 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_1_child(Factor_AST,(yyvsp[0].np));}
-#line 1402 "ast.tab.c" /* yacc.c:1646  */
+#line 1403 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 56 "ast.y" /* yacc.c:1646  */
+#line 57 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_1_child(Factor_AST,(yyvsp[-1].np));}
-#line 1408 "ast.tab.c" /* yacc.c:1646  */
+#line 1409 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 59 "ast.y" /* yacc.c:1646  */
+#line 60 "ast.y" /* yacc.c:1646  */
     {(yyval.np) = build_ident_node(IDENT_AST,(yyvsp[0].sp));}
-#line 1414 "ast.tab.c" /* yacc.c:1646  */
+#line 1415 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 60 "ast.y" /* yacc.c:1646  */
+#line 61 "ast.y" /* yacc.c:1646  */
     {(yyval.np) = build_num_node(NUM_AST,(yyvsp[0].ival));}
-#line 1420 "ast.tab.c" /* yacc.c:1646  */
+#line 1421 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 61 "ast.y" /* yacc.c:1646  */
+#line 62 "ast.y" /* yacc.c:1646  */
     {(yyval.np) = build_array_node(ARRAY_AST,(yyvsp[-3].sp),(yyvsp[-1].ival));}
-#line 1426 "ast.tab.c" /* yacc.c:1646  */
+#line 1427 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 65 "ast.y" /* yacc.c:1646  */
+#line 66 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_child(WHILE_AST,(yyvsp[-4].np),(yyvsp[-1].np));}
-#line 1432 "ast.tab.c" /* yacc.c:1646  */
+#line 1433 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 68 "ast.y" /* yacc.c:1646  */
+#line 69 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_child(IF_AST,(yyvsp[-4].np),(yyvsp[-1].np));}
-#line 1438 "ast.tab.c" /* yacc.c:1646  */
+#line 1439 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 69 "ast.y" /* yacc.c:1646  */
+#line 70 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_3_child(IF_AST,(yyvsp[-8].np),(yyvsp[-5].np),(yyvsp[-1].np));}
-#line 1444 "ast.tab.c" /* yacc.c:1646  */
+#line 1445 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 72 "ast.y" /* yacc.c:1646  */
+#line 73 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_child(EQ_AST,(yyvsp[-2].np),(yyvsp[0].np));}
-#line 1450 "ast.tab.c" /* yacc.c:1646  */
+#line 1451 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 73 "ast.y" /* yacc.c:1646  */
+#line 74 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_child(LT_AST,(yyvsp[-2].np),(yyvsp[0].np));}
-#line 1456 "ast.tab.c" /* yacc.c:1646  */
+#line 1457 "ast.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 74 "ast.y" /* yacc.c:1646  */
+#line 75 "ast.y" /* yacc.c:1646  */
     {(yyval.np)=build_child(GT_AST,(yyvsp[-2].np),(yyvsp[0].np));}
-#line 1462 "ast.tab.c" /* yacc.c:1646  */
+#line 1463 "ast.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1466 "ast.tab.c" /* yacc.c:1646  */
+#line 1467 "ast.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1690,12 +1691,12 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 81 "ast.y" /* yacc.c:1906  */
+#line 82 "ast.y" /* yacc.c:1906  */
 
 
 int main(void){
     FILE *fp;
-    char str[] ="\
+    /* char str[] ="                                                    \
     INITIAL_GP = 0x10008000     # initial value of global pointer \n\
     INITIAL_SP = 0x7ffffffc     # initial value of stack pointer \n\
     # system call service number \n\
@@ -1721,7 +1722,7 @@ stop:                   # if syscall return  \n\
     nop             # (delay slot) \n\
  \n\
     .text 	0x00001000";
-
+*/
     if(yyparse()){
         fprintf(stderr,"Error\n");
         return 1;
@@ -1731,9 +1732,8 @@ stop:                   # if syscall return  \n\
         fprintf(stderr, "ファイルのオープンに失敗しました.\n");
         exit(1);    
     }
-    fprintf(fp,"%s\n",str);
+    //fprintf(fp,"%s\n",str);
     printTree(top,fp);
-    fprintf(fp,"\n");
     fclose(fp);
     return 0;
 }

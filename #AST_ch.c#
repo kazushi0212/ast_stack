@@ -4,9 +4,10 @@
 #include "AST.h"
 
 int Decl_num=0; // Decl_AStの時，一度だけ .data 0x10004000を表示するため
-
-int stack_num=0;
-
+int def_n=0; // defineの時に，identの処理を行わない
+int main_num=0;
+int t_reg=0; //レジスタ$t　の引数
+int loop_num=1;
 
 //SimTableEntry simTable[100];
 Node *build_1_child(NType t,Node *p1){
@@ -80,7 +81,35 @@ Node *build_array_node(NType t,char *str,int n){
     return p;
 }
 
-void checkchild(Node *p,FILE *fp){
+void make_init(FILE *fp){
+    char str[]="\
+    INITIAL_GP = 0x10008000     # initial value of global pointer \n\
+    INITIAL_SP = 0x7ffffffc     # initial value of stack pointer \n\
+    # system call service number \n\
+    stop_service = 99 \n\
+\n\
+    .text \n\
+init: \n\
+    # initialize $gp (global pointer) and $sp (stack pointer) \n\
+    la	$gp, INITIAL_GP    # (下の2行に置き換えられる) \n\
+#   lui	$gp, 0x1000     # $gp ← 0x10008000 (INITIAL_GP) \n\
+#   ori	$gp, $gp, 0x8000 \n\
+    la	$sp, INITIAL_SP     # (下の2行に置き換えられる) \n\
+#   lui	$sp, 0x7fff     # $sp ← 0x7ffffffc (INITIAL_SP) \n\
+#   ori	$sp, $sp, 0xfffc \n\
+    jal	main            # jump to `main' \n\
+    nop             # (delay slot) \n\
+    li	$v0, stop_service   # $v0 ← 99 (stop_service) \n\
+    syscall             # stop \n\
+    nop \n\
+    # not reach here \n\
+stop:                   # if syscall return  \n\
+    j stop              # infinite loop... \n\
+    nop             # (delay slot) \n";
+    fprintf(fp,"%s\n",str);
+}
+
+void checkNode(Node *p,FILE *fp){
   if(p->child != NULL){
     printTree(p->child,fp);
   }
@@ -90,163 +119,164 @@ void checkchild(Node *p,FILE *fp){
   } 
 }
 
+void assign_print(Node *p,FILE *fp){
+    fprintf(fp,"\tli   $t%d,%s\n",t_reg,p->varName);
+    fprintf(fp,"\tsw   $t%d,$t%d",t_reg-1,t_reg);
+}
+void define_print(Node *p,FILE *fp){
+    if(def_n == 0){
+        fprintf(fp,"\tla   $t%d,%s\n",t_reg,p->varName);
+        t_reg++;           
+    }
+}
 void printTree(Node *p,FILE *fp){
-  int t_reg=0; //レジスタ$tの引数
   if(p != NULL){
         switch(p->type){
         case Pro_AST:
+            make_init(fp);
             printf("PROGRAM\n");
-	    checkchild(p,fp);
+            checkNode(p,fp);
             break;
         case Decl_AST:
             printf("DECLARATION\n");
             if(Decl_num==0){
-                fprintf(fp,"    .data   0x00004000\n");
+                fprintf(fp,"\t.data   0x10004000\n");
                 Decl_num++;
             }
-	    checkchild(p,fp);
+            checkNode(p,fp);
+
             break;
         case Decl_stmt_AST:
             printf("Decl_statement\n");
-	    checkchild(p,fp);
+            checkNode(p,fp);
             break;
         case Stmts_AST:
             printf("statements\n");
-            if(p->child != NULL){
-                printf("(");
-                printTree(p->child,fp);
+            if(main_num==0){
+            fprintf(fp,"\t.text 	0x00001000\n");
+            fprintf(fp,"main:\n");
+            main_num++;
             }
+            checkNode(p,fp);
             break;
         case Stmt_AST:
             printf("statement\n");
-	    checkchild(p,fp);
+            checkNode(p,fp);
             break;
             
 ////////NUM,IDENT/////
         case IDENT_AST:
             printf("%s\t",p->varName);
-            fprintf(fp,"    sw   %s,%d($sp)",p->varName,stack_num);
-	    stack_num=stack_num+4;
-	    checkchild(p,fp);
+/*
+            if(def_n == 0){
+                fprintf(fp,"\tla   $t%d,%s\n",t_reg,p->varName);
+                t_reg++;           
+            }
+*/
+            checkNode(p,fp);
             break;
         case NUM_AST:
             printf("%d\t",p->value);
-            fprintf(fp,"    sw   %d,%d($sp)",p->value,stack_num);
-	    stack_num=stack_num+4;
-	    checkchild(p,fp);
+            fprintf(fp,"\tli   $t%d,%d\n",t_reg,p->value);
+            t_reg++;
+            checkNode(p,fp);
             break;
-
 
         case Expr_AST:
             printf("expression\n");
-	    checkchild(p,fp);
+            checkNode(p,fp);
             break;
         case Term_AST:
             printf("term\n");
-	    checkchild(p,fp);
+            checkNode(p,fp);
             break;
         case Factor_AST:
             printf("factor\n");
-	    checkchild(p,fp);
+            checkNode(p,fp);
             break;
             
 //////////DEFINE,ARRAY
         case DEFINE_AST:
             printf("DEFINE\n");
-	    fprintf(fp,"%s   .word  0x0000",p->child->varName);
-	    checkchild(p,fp);
+            fprintf(fp,"%s:   .word  0x0000\n",p->child->varName);
+            def_n=1;
+            checkNode(p,fp);
+            def_n=0;
             break;
         case ARRAY_AST:
             printf("ARRAY\n");
-	    checkchild(p,fp);
+            checkNode(p,fp);
             break;
 	    
 /////WHILE,IF
         case WHILE_AST:
             printf("WHILE\n");
-            fprintf(fp,"$LOOP:\n");
-	    checkchild(p,fp);
-            fprintf(fp,"\
-    j   $LOOP \n\
-    nop\n");
-            fprintf(fp,"\
-$EXIT: \n\
-    jr   $ra \n\
-    nop");
+            fprintf(fp,"$L%d:\n",loop_num);
+            checkNode(p,fp);
+            fprintf(fp,"\tj $L%d\n",loop_num);
+            fprintf(fp,"$L2: \n \tjr   $ra \n \tnop");
             break;
         case IF_AST:
             printf("IF\n");
-            if(p->child != NULL){
-                printTree(p->child,fp);
-            }
+            checkNode(p,fp);
             break;
 
 //////算術式
         case ASSIGN_AST:
             printf(" = \n");
-            if(p->child->type != ADD_AST && p->child->brother->type != ADD_AST){
-            fprintf(fp,"    li    register,");
-            assign_num++;
-            }
-	    checkchild(p,fp);
-           fprintf(fp,"\n");
+            checkNode(p,fp);
+            assign_print(p,fp); //追加
+                //fprintf(fp,"\tsw   $t%d,0($t%d)\n",t_reg-1,t_reg-2);
+            t_reg=0;
             break;
-
 
         case ADD_AST:
             printf(" + \n");
-	    checkchild(p,fp);
-	    stack_num=stack_num-4;
-            fprintf(fp,"\
-    lw    $t0,%d($sp) \n\
-    lw    $t1,%d(&sp) \n\
-    add   $t0,$t0,$t1 \n\
-    sw    $t0,%d($sp) \n",stack_num,stack_num+4,stack_num);
-	    stck_num=stack_num+4;
-            
-	    
+            checkNode(p,fp);
+            fprintf(fp,"\tadd   $t%d,$t%d,$t%d\n",t_reg,t_reg-1,t_reg-2);
+            t_reg++;
             break;
-            
+           
         case SUB_AST:
             printf(" - \n");
-	    checkchild(p,fp);
+            checkNode(p,fp);
             break;
         case MUL_AST:
             printf(" * \n");
-	    checkchild(p,fp);
+            checkNode(p,fp);
             break;
         case DIV_AST:
             printf(" / \n");
-	    checkchild(p,fp);
+            checkNode(p,fp);
             break;
         case EQ_AST:
             printf(" == \n");
-            fprintf(fp,"    beq");
-	    checkchild(p,fp);
+            checkNode(p,fp);
+           fprintf(fp,"    beq");
             break;
         case LT_AST:
             printf(" < \n");
-            fprintf(fp,"    bltz   $t%d,",t_reg); //$t%dの部分は以前に定義されている関数を用いる場合はその関数のレジスタに変える
-	    checkchild(p,fp);
-            fprintf(fp,",$EXIT\n");
+            //checkNode(p,fp);
+
+            if(p->child != NULL){
+                printTree(p->child,fp);
+            }
+            fprintf(fp,"\tslt   $t%d,$t%d,$t%d\n",t_reg,t_reg-2,t_reg-1);
+            fprintf(fp,"\tbeq   $t%d,$zero,$L%d\n",t_reg,loop_num+1);
+                      
+            if(p->brother != NULL){
+                printTree(p->brother,fp);
+            } 
+            
             break;
         case GT_AST:
             printf(" > \n");
-            fprintf(fp,"    bgtz");
-	    checkchild(p,fp);
+            fprintf(fp,"    ");
+            checkNode(p,fp);
             break;
         default :
             fprintf(stderr,"print error\n");
         }
-
-/*
-        if(p->child != NULL){
-            printf("(");
-            printTree(p->child,fp);
-        }else{
-            printf(")");
-        }
-*/
     }
 }
 

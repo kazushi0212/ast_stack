@@ -222,7 +222,6 @@ void printTree(Node *p,FILE *fp){
             break;
 
         case ADD_AST:
-            ast_n=1;
             printf(" + \n");
             checkNode(p,fp);
             fprintf(fp,"\tadd   $t%d,$t%d,$t%d\n",t_reg,t_reg-1,t_reg-2);
