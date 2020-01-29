@@ -24,35 +24,43 @@ stop:                   # if syscall return
 
 	.data   0x10004000
 i:	.word  0x0000
-sum:	.word  0x0000
+fact:	.word  0x0000
 	.text 	0x00001000
 main:
-	la   $t0,sum
-	li   $t1,0
+	li   $t0,fact
+	li   $t1,1
 	sw   $t1,0($t0)
-	la   $t0,i
+	li   $t0,i
 	li   $t1,1
 	sw   $t1,0($t0)
 $L1:
-	la   $t0,i
-	li   $t1,11
-	slt   $t2,$t0,$t1
-	beq   $t2,$zero,$L2
-	la   $t2,sum
-	la   $t3,sum
-	lw   $t4,0($t0)
-	la   $t4,i
-	lw   $t5,0($t0)
-	add   $t5,$t4,$t3
-	sw   $t5,0($t0)
-	la   $t0,i
+	li   $t0,i
 	lw   $t1,0($t0)
-	la   $t1,i
-	lw   $t2,0($t0)
-	li   $t2,1
-	add   $t3,$t2,$t1
-	sw   $t3,0($t0)
+	nop
+	li   $t2,6
+	slt   $t3,$t1,$t2
+	beq   $t3,$zero,$L2
+	li   $t0,fact
+	lw   $t1,0($t0)
+	nop
+	li   $t2,fact
+	lw   $t3,0($t2)
+	nop
+	li   $t4,i
+	lw   $t5,0($t4)
+	nop
+	mult   $t5,$t3
+	mflo   $t6
+	sw   $t6,0($t0)
+	li   $t0,i
+	li   $t1,i
+	lw   $t2,0($t1)
+	nop
+	li   $t3,1
+	add   $t4,$t3,$t2
+	sw   $t4,0($t0)
 	j $L1
+	nop
 $L2:
 $EXIT: 
  	jr   $ra 

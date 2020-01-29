@@ -7,8 +7,11 @@ int Decl_num=0; // Decl_AStの時，一度だけ .data 0x10004000を表示する
 int def_n=0; // defineの時に，identの処理を行わない
 int ast_n = 0;
 int main_num=0;
-int t_reg=0; //レジスタ$t　の引数
 int loop_num=1;
+
+int t_reg=0; //レジスタ$t　の引数
+int a=0;
+int b=0;   //算術式の際適切なt_regを指定
 
 //SimTableEntry simTable[100];
 Node *build_1_child(NType t,Node *p1){
@@ -159,9 +162,12 @@ void printTree(Node *p,FILE *fp){
         case IDENT_AST:
             printf("%s\t",p->varName);
             if(def_n == 0){
-                fprintf(fp,"\tla   $t%d,%s\n",t_reg,p->varName);
+                fprintf(fp,"\tli   $t%d,%s\n",t_reg,p->varName);
                 if(ast_n != 0){
-                fprintf(fp,"\tlw   $t%d,0($t0)\n",t_reg+1);
+                    fprintf(fp,"\tlw   $t%d,0($t%d)\n",t_reg+1,t_reg);
+                    fprintf(fp,"\tnop\n");
+                    t_reg++;
+                    a=t_reg;
                 }
                 t_reg++;
             }
@@ -171,13 +177,13 @@ void printTree(Node *p,FILE *fp){
             printf("%d\t",p->value);
             fprintf(fp,"\tli   $t%d,%d\n",t_reg,p->value);
             t_reg++;
+            b=t_reg;
             checkNode(p,fp);
             break;
 
         case Expr_AST:
             printf("expression\n");
-            checkNode(p,fp);
-            break;
+            checkNode(p,fp);            break;
         case Term_AST:
             printf("term\n");
             checkNode(p,fp);
@@ -206,6 +212,7 @@ void printTree(Node *p,FILE *fp){
             fprintf(fp,"$L%d:\n",loop_num);
             checkNode(p,fp);
             fprintf(fp,"\tj $L%d\n",loop_num);
+            fprintf(fp,"\tnop\n");
             fprintf(fp,"$L2:\n");
             break;
         case IF_AST:
@@ -222,10 +229,17 @@ void printTree(Node *p,FILE *fp){
             break;
 
         case ADD_AST:
-            ast_n=1;
+            ast_n=1; //identでlwの処理を行うかどうか
             printf(" + \n");
             checkNode(p,fp);
-            fprintf(fp,"\tadd   $t%d,$t%d,$t%d\n",t_reg,t_reg-1,t_reg-2);
+
+            if(a>b){
+                a=b;
+            }
+            fprintf(fp,"\tadd   $t%d,$t%d,$t%d\n",t_reg,t_reg-1,a);
+            ast_n=0; //初期化
+            a=0;
+            b=0;
             t_reg++;
             break;
            
@@ -235,7 +249,18 @@ void printTree(Node *p,FILE *fp){
             break;
         case MUL_AST:
             printf(" * \n");
+            ast_n=1; //identでlwの処理を行うかどうか
             checkNode(p,fp);
+
+            if(a>b){
+                a=b;
+            }
+            fprintf(fp,"\tmult   $t%d,$t%d\n",t_reg-1,a);
+            fprintf(fp,"\tmflo   $t%d\n",t_reg);
+            ast_n=0; //初期化
+            a=0;
+            b=0;
+            t_reg++;
             break;
         case DIV_AST:
             printf(" / \n");
@@ -247,18 +272,19 @@ void printTree(Node *p,FILE *fp){
            fprintf(fp,"    beq");
             break;
         case LT_AST:
+            ast_n=1;   //identでlwの処理がいる場合とで場合分け
             printf(" < \n");
             //checkNode(p,fp);
-
             if(p->child != NULL){
                 printTree(p->child,fp);
             }
             fprintf(fp,"\tslt   $t%d,$t%d,$t%d\n",t_reg,t_reg-2,t_reg-1);
             fprintf(fp,"\tbeq   $t%d,$zero,$L%d\n",t_reg,loop_num+1);
-                      
+            t_reg=0; 
             if(p->brother != NULL){
                 printTree(p->brother,fp);
             } 
+            ast_n=0;     //identでlwの処理がいる場合とで場合分け
             
             break;
         case GT_AST:
