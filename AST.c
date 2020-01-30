@@ -7,7 +7,9 @@ int Decl_num=0; // Decl_AStの時，一度だけ .data 0x10004000を表示する
 int def_n=0; // defineの時に，identの処理を行わない
 int ast_n = 0;
 int main_num=0;
-int loop_num=1;
+int loop_num=0;
+int if_num=0;
+
 
 int t_reg=0; //レジスタ$t　の引数
 int a=0;
@@ -123,6 +125,7 @@ void checkNode(Node *p,FILE *fp){
   } 
 }
 
+
 void regcheck(Node *p,FILE *fp){
     printTree(p->child,fp);
             if(a!=0 && b==0){
@@ -131,7 +134,7 @@ void regcheck(Node *p,FILE *fp){
             if(b!=0 && a==0){
                 tmp=b;
             }           
-            ast_n=1; //identでlwの処理を行うかどうか
+            //ast_n=1; //identでlwの処理を行うかどうか
     
             if(p->child->brother != NULL){
                 ast_n=1; //identでlwの処理を行うかどうか,項が3以上の算術式の時の変数呼び出しに必要
@@ -197,7 +200,7 @@ void printTree(Node *p,FILE *fp){
                     fprintf(fp,"\tlw   $t%d,0($t%d)\n",t_reg+1,t_reg);
                     fprintf(fp,"\tnop\n");
                     t_reg++;                   
-                        a=t_reg;                    
+                    a=t_reg;                    
                 }
                 t_reg++;
             }
@@ -250,18 +253,36 @@ void printTree(Node *p,FILE *fp){
             if(p->child->type != EQ_AST){
                 fprintf(fp,"\tbeq   $t%d,$zero,$L%d\n",t_reg,loop_num+1);
             }
+            if(p->child->type == EQ_AST){
+                fprintf(fp,"\tbne   $t%d,$t%d,$L%d\n",a,b,loop_num+1);
+            }
             t_reg=0;
             printTree(p->child->brother,fp);
             fprintf(fp,"\tj $L%d\n",loop_num);
             fprintf(fp,"\tnop\n");
-            fprintf(fp,"$L2:\n");
+            fprintf(fp,"$L%d:\n",loop_num+1);
             a=0;
             b=0;
             loop_num=loop_num+2;
             break;
         case IF_AST:
             printf("IF\n");
+            fprintf(fp,"$D%d:\n",if_num);
             checkNode(p,fp);
+            if(p->child->type != EQ_AST){
+                fprintf(fp,"\tbeq   $t%d,$zero,$D%d\n",t_reg,if_num+1);
+            }
+            if(p->child->type == EQ_AST){
+                fprintf(fp,"\tbne   $t%d,$t%d,$D%d\n",a,b,if_num+1);
+            }
+            t_reg=0;
+            printTree(p->child->brother,fp);
+            //fprintf(fp,"\tj $D%d\n",if_num);
+            fprintf(fp,"\tnop\n");
+            fprintf(fp,"$D%d:\n",if_num+1);
+            a=0;
+            b=0;
+            if_num=if_num+2;
             break;
 
 //////算術式
@@ -286,7 +307,7 @@ void printTree(Node *p,FILE *fp){
             ast_n=0; //初期化
             t_reg++;
             a=t_reg-1;
-            b=t_reg;
+            b=t_reg-1;
             tmp=0;
             break;
            
@@ -300,7 +321,7 @@ void printTree(Node *p,FILE *fp){
             ast_n=0; //初期化
             t_reg++;
             a=t_reg-1;
-            b=t_reg;
+            b=t_reg-1;
             tmp=0;
             break;
         case MUL_AST:
@@ -314,7 +335,7 @@ void printTree(Node *p,FILE *fp){
             ast_n=0; //初期化
             t_reg++;
             a=t_reg-1;
-            b=t_reg;
+            b=t_reg-1;
             tmp=0;
             break;
         case DIV_AST:
@@ -328,7 +349,7 @@ void printTree(Node *p,FILE *fp){
             ast_n=0; //初期化
             t_reg++;
             a=t_reg-1;
-            b=t_reg;
+            b=t_reg-1;
             tmp=0;
             break;
 
@@ -337,11 +358,13 @@ void printTree(Node *p,FILE *fp){
             ast_n=1;   //identでlwの処理がいる場合とで場合分け
             printf(" == \n");
             regcheck(p,fp);
-            fprintf(fp,"\tbne   $t%d,$t%d,$L%d\n",a,b,loop_num+1);
+            //fprintf(fp,"\tbne   $t%d,$t%d,$L%d\n",a,b,loop_num+1);
+            ast_n=0;     //初期化
+/*
             a=0;
             b=0;
-            ast_n=0;     //初期化
             tmp=0;
+*/
             break;
         case LT_AST:
             ast_n=1;   //identでlwの処理がいる場合とで場合分け

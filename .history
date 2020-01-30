@@ -1,5 +1,3 @@
-bye
-print $t0
 print $t3
 print 0($t0)
 print 0x00004000
@@ -457,5 +455,46 @@ bye
 run
 prin 0x10004000
 print 0x10004000
+print 0x10004004
+bye
+run
+bye
+run
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004004
+print 0x10004000
+bye
+run
+print 0x10004000
+bye
+run
+print 0x10004000
+bye
+run
+print 0x10004000
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004004
+bye
+run
 print 0x10004004
 bye
