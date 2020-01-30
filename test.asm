@@ -22,27 +22,40 @@ stop:                   # if syscall return
     j stop              # infinite loop... 
     nop             # (delay slot) 
 
-	.data   0x10004000
-i:	.word  0x0000
-fact:	.word  0x0000
-	.text 	0x00001000
-main:
-	li   $t0,fact
-	li   $t1,1
+	.data   0x10004000 	;in Decl_AST 
+i:	.word  0x0000 	;in DEFINE_AST 
+fact:	.word  0x0000 	;in DEFINE_AST 
+	.text 	0x00001000 	;in Stmts_AST 
+main: 	;in Stmts_AST 
+	li   $t0,fact  	;in IDENT_AST 
+	li   $t1,1 	;in NUM_AST 
 	sw   $t1,0($t0)
-	li   $t0,i
-	li   $t1,1
+	li   $t0,i  	;in IDENT_AST 
+	li   $t1,3 	;in NUM_AST 
 	sw   $t1,0($t0)
-	li   $t0,i
-	lw   $t1,0($t0)
-	nop
-	li   $t2,2
-	bne   $t1,$t2,$D0
-	li   $t0,i
-	li   $t1,0
+;!!!!!!!!!!IF!!!!!!!!!!!
+	li   $t0,i  	;in IDENT_AST 
+	lw   $t1,0($t0) 	;in IDENT_AST 
+	nop 	;in IDENT_AST 
+	li   $t2,3 	;in NUM_AST 
+	bne   $t1,$t2,$D1 	;in IF_AST 
+	li   $t0,fact  	;in IDENT_AST 
+	li   $t1,10 	;in NUM_AST 
 	sw   $t1,0($t0)
-	nop
-$D0:
+;!!!!!!!!!!ELSEIF!!!!!!!!!!!
+	j   $D0 	;ELSEIF_AST 
+ 	nop 
+$D1: 	;in ELSEIF_AST 
+	li   $t0,i  	;in IDENT_AST 
+	lw   $t1,0($t0) 	;in IDENT_AST 
+	nop 	;in IDENT_AST 
+	li   $t2,8 	;in NUM_AST 
+	bne   $t1,$t2,$D0 	;in ELSEIF_AST
+ 	li   $t0,fact  	;in IDENT_AST 
+	li   $t1,5 	;in NUM_AST 
+	sw   $t1,0($t0)
+	nop 	;in IF_AST
+$D0: 	;in IF_AST
 $EXIT: 
- 	jr   $ra 
+ 	jr   $ra 	;in Pro_AST 
  	nop

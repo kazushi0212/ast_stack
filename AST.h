@@ -20,6 +20,8 @@ typedef enum{
     ARRAY_AST,
     WHILE_AST,
     IF_AST,
+    ELSE_AST,
+    ELSEIF_AST,
 
     ASSIGN_AST,
     ADD_AST,
@@ -57,6 +59,7 @@ SimTableEntry simTable[MAXSIMENTRIES];
 Node *build_1_child(NType t,Node *p1);
 Node *build_child(NType t,Node *p1,Node *p2);
 Node *build_3_child(NType t,Node *p1,Node *p2,Node *p3);
+Node *build_4_child(NType t,Node *p1,Node *p2,Node *p3,Node *p4);
 Node *build_num_node(NType t,int n);
 Node *build_ident_node(NType t,char *str);
 Node *build_array_node(NType t,char *str,int n);

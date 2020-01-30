@@ -14,7 +14,7 @@ Node *tmp5; //define用
     int ival;
     char* sp;
  }
-%token DEFINE ARRAY WHILE IF ELSE
+%token DEFINE ARRAY WHILE IF ELSE ELSEIF
 %token SEMIC L_BRACKET R_BRACKET L_PARAM R_PARAM L_BRACE R_BRACE
 %token ASSIGN ADD SUB MUL DIV MOD 
 %token EQ LT GT
@@ -22,6 +22,7 @@ Node *tmp5; //define用
 %token <sp> IDENT
 %token <ival> NUMBER
 %type <np> declarations decl_statement statements statement assignment_stmt expression term factor var loop_stmt cond_stmt condition 
+%type <np> cond_else cond_elseif
 %%
 
 program : declarations statements {top=build_child(Pro_AST,$1,$2);}
@@ -67,49 +68,34 @@ loop_stmt : WHILE L_PARAM condition R_PARAM L_BRACE statements R_BRACE
 ;
 
 cond_stmt : IF L_PARAM condition R_PARAM L_BRACE statements R_BRACE {$$=build_child(IF_AST,$3,$6);}
-| IF L_PARAM condition R_PARAM L_BRACE statements R_BRACE ELSE L_BRACE statements R_BRACE {$$=build_3_child(IF_AST,$3,$6,$10);}
+|IF L_PARAM condition R_PARAM L_BRACE statements R_BRACE cond_else {$$=build_3_child(IF_AST,$3,$6,$8);}
+|IF L_PARAM condition R_PARAM L_BRACE statements R_BRACE cond_elseif {$$=build_3_child(IF_AST,$3,$6,$8);}
+|IF L_PARAM condition R_PARAM L_BRACE statements R_BRACE cond_elseif cond_else {$$=build_4_child(IF_AST,$3,$6,$8,$9);}
 ;
+
+cond_else : ELSE L_BRACE statements R_BRACE {$$=build_1_child(ELSE_AST,$3);}
+;
+
+cond_elseif : 
+ELSEIF L_PARAM condition R_PARAM L_BRACE statements R_BRACE  {$$=build_child(ELSEIF_AST,$3,$6);}
+//ELSEIF L_PARAM condition R_PARAM L_BRACE statements R_BRACE {$$=build_child(ELSEIF_AST,$3,$6);}
+/*
+| ELSE IF L_PARAM condition R_PARAM L_BRACE statements R_BRACE cond_elseif{$$=build_3_child(ELSEIF_AST,$3,$6,$8);}
+*/
+;
+
 
 condition : expression EQ expression {$$=build_child(EQ_AST,$1,$3);}
 | expression LT expression {$$=build_child(LT_AST,$1,$3);}
 | expression GT expression {$$=build_child(GT_AST,$1,$3);}
 ;
 
-/*
-cond_op : EQ | EQ ASSIGN| LT | LT ASSIGN | GT 
-;
-*/
+
 %%
 
 int main(void){
     FILE *fp;
-    /* char str[] ="                                                    \
-    INITIAL_GP = 0x10008000     # initial value of global pointer \n\
-    INITIAL_SP = 0x7ffffffc     # initial value of stack pointer \n\
-    # system call service number \n\
-    stop_service = 99 \n\
-\n\
-    .text \n\
-init: \n\
-    # initialize $gp (global pointer) and $sp (stack pointer) \n\
-    la	$gp, INITIAL_GP    # (下の2行に置き換えられる) \n\
-#   lui	$gp, 0x1000     # $gp ← 0x10008000 (INITIAL_GP) \n\
-#   ori	$gp, $gp, 0x8000 \n\
-    la	$sp, INITIAL_SP     # (下の2行に置き換えられる) \n\
-#   lui	$sp, 0x7fff     # $sp ← 0x7ffffffc (INITIAL_SP) \n\
-#   ori	$sp, $sp, 0xfffc \n\
-    jal	main            # jump to `main' \n\
-    nop             # (delay slot) \n\
-    li	$v0, stop_service   # $v0 ← 99 (stop_service) \n\
-    syscall             # stop \n\
-    nop \n\
-    # not reach here \n\
-stop:                   # if syscall return  \n\
-    j stop              # infinite loop... \n\
-    nop             # (delay slot) \n\
- \n\
-    .text 	0x00001000";
-*/
+
     if(yyparse()){
         fprintf(stderr,"Error\n");
         return 1;

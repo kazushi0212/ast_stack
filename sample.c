@@ -1,10 +1,14 @@
 define i;
 define fact;
 
-fact = 1;
-i = 1;
-if(i==2){
-    i=5;
-}else{
-    i=0;
+fact=1;
+i=3;
+if(i==3){
+    fact=10;    
 }
+else if(i==8){
+    fact=5;
+}
+
+
+

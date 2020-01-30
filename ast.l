@@ -8,7 +8,8 @@
 "array"  return ARRAY;
 "while"  return WHILE;
 "if"  return IF;
-"else"  return ELSE;
+"else"  return ELSE; 
+"else if" return ELSEIF; //追加分 
 ";"  return SEMIC;
 "["  return L_BRACKET;
 "]"  return R_BRACKET;

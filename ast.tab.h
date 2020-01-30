@@ -50,24 +50,25 @@ extern int yydebug;
     WHILE = 260,
     IF = 261,
     ELSE = 262,
-    SEMIC = 263,
-    L_BRACKET = 264,
-    R_BRACKET = 265,
-    L_PARAM = 266,
-    R_PARAM = 267,
-    L_BRACE = 268,
-    R_BRACE = 269,
-    ASSIGN = 270,
-    ADD = 271,
-    SUB = 272,
-    MUL = 273,
-    DIV = 274,
-    MOD = 275,
-    EQ = 276,
-    LT = 277,
-    GT = 278,
-    IDENT = 279,
-    NUMBER = 280
+    ELSEIF = 263,
+    SEMIC = 264,
+    L_BRACKET = 265,
+    R_BRACKET = 266,
+    L_PARAM = 267,
+    R_PARAM = 268,
+    L_BRACE = 269,
+    R_BRACE = 270,
+    ASSIGN = 271,
+    ADD = 272,
+    SUB = 273,
+    MUL = 274,
+    DIV = 275,
+    MOD = 276,
+    EQ = 277,
+    LT = 278,
+    GT = 279,
+    IDENT = 280,
+    NUMBER = 281
   };
 #endif
 
@@ -83,7 +84,7 @@ union YYSTYPE
     char* sp;
  
 
-#line 87 "ast.tab.h" /* yacc.c:1909  */
+#line 88 "ast.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

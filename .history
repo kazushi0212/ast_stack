@@ -1,405 +1,435 @@
-print $t1
-bye
-print $t1
-print $t0
-bye
-print $t1
-print $t0
-bye
-print $t0
-print $t1
-bye
-print $t1
-print $t0
-bye
-print 0x10004000
-print $t0
-print $t1
+print 0x10004008
 bye
 run
-print $t1
-bye
-ls
-bye
-run
-print $t0
 print 0x10004000
 print 0x10004004
+print 0x10004008
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+print 0x10004008
+bye
+run
+print 0x10004000
+print 0x10004008
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+print 0x10004008
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+print 0x10004008
+bye
+run
+prin 0x10004000
+print 0x10004000
+print 0x10004004
+print 0x10004008
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+print 0x10004000
+print 0x10004004
+bye
+print 0x10004000
+print 0x10004004
+print 0x10004000
+bye
+print 0x10004000
+print 0x10004004
+print 0x10004008
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+print 0x10004008
+bye
+run
+print 0x10004008
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+print 0x10004008
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+prin 0x10004000
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004004
+print 0x10004000
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004004
+bye
+run
+print 0x10004004
+bye
+run
+print 0x10004004
+bye
+run
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+prin 0x10004000
+print 0x10004000
+print 0x10004004
+bye
+run
+bye
+run
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004004
+print 0x10004000
+bye
+run
+print 0x10004000
+bye
+run
+print 0x10004000
+bye
+run
+print 0x10004000
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004004
+bye
+run
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004004
+print 0x10004000
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+prin 0x10004000
+print 0x10004000
+print 0x10004004
+bye
+run 
+print 0x10004000
+print 0x10004004
+bye
+run 
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
 print 0x10004001
-print 0x10004002
-print 0x10004003
-print 0x10004008
-print $t0
-print $t1
-print $t2
-print $t3
-print $t4
-print $t5
-bye
-run
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-print $t0
-print $t1
-print $t2
-print $t3
-print $t4
-print $t5
-print $t6
-print $t7
-print $t8
-bye
-run
-print 0x10004000
-print 0x10004004
-print 0x10004008
-print $t0
-bye
-run
-print $t0
-print $t1
-print $t2
-print $t3
-print 0x10004000
-print 0x10004004
-print 0x10004008
-bye
-run
-print $t0
-print $t1
-print $t2
-print $t3
-bye
-run
-print 0x10004000
-print 0x10004001
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-print 0x10004008
-print 0x10004012
-print 0x10004016
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-print 0x10004008
-bye
-run
-print $t0
-print $t2
-print $t1
-bye
-run
-print $t1
-print $t0
-print $t2
-print $t3
-print $t4
-print 0x10004000
-print 0x10004004
-print 0x10004008
-bye
-run
-print 0x10004000
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print $t0
-print 0x10004000
-print 0x10004004
-bye
-print 0x10004000
-run
-print 0x10004000
-print 0x10004004
-print $t0
-bye
-run
-print 0x10004000
-print 0x10004004
-print $t4
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-print 0x10004008
-print 0x10004012
-print 0x10004000
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-print 0x10004008
-bye
-run
-print 0x10004000
-print 0x10004004
-print 0x10004008
-bye
-run
-print 0x10004000
-print 0x10004004
-print 0x10004008
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-print 0x10004008
-bye
-run
-print 0x10004000
-print 0x10004008
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-print 0x10004008
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-print 0x10004008
-bye
-run
-prin 0x10004000
-print 0x10004000
-print 0x10004004
-print 0x10004008
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-print 0x10004000
-print 0x10004004
-bye
-print 0x10004000
-print 0x10004004
-print 0x10004000
-bye
-print 0x10004000
-print 0x10004004
-print 0x10004008
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-print 0x10004008
-bye
-run
-print 0x10004008
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-print 0x10004008
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-prin 0x10004000
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004004
-print 0x10004000
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004004
-bye
-run
-print 0x10004004
-bye
-run
-print 0x10004004
-bye
-run
-print 0x10004004
-bye
-run
-print 0x10004000
 print 0x10004004
 bye
 run
-print 0x10004000
-print 0x10004004
 bye
 run
 print 0x10004000
@@ -407,16 +437,13 @@ print 0x10004004
 bye
 run
 print 0x10004000
-print 0x10004004
-bye
-run
 print 0x10004004
 bye
 run
 print 0x10004000
 print 0x10004004
 bye
-run
+run 
 print 0x10004000
 print 0x10004004
 bye
@@ -425,7 +452,6 @@ print 0x10004000
 print 0x10004004
 bye
 run
-prin 0x10004000
 print 0x10004000
 print 0x10004004
 bye
@@ -440,34 +466,15 @@ bye
 run
 print 0x10004000
 print 0x10004004
-bye
-run
 bye
 run
 print 0x10004000
-print 0x10004004
-bye
-run
 print 0x10004004
-print 0x10004000
-bye
-run
-print 0x10004000
 bye
 run
-print 0x10004000
-bye
-run
-print 0x10004000
 bye
 run
 print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004004
-bye
-run
 print 0x10004004
 bye
 run
@@ -479,22 +486,15 @@ print 0x10004000
 print 0x10004004
 bye
 run
-print 0x10004000
-print 0x10004004
 bye
 run
-print 0x10004000
 print 0x10004004
 bye
 run
-print 0x10004000
-print 0x10004004
 bye
 run
-print 0x10004000
 print 0x10004004
 bye
 run
-print 0x10004000
 print 0x10004004
 bye

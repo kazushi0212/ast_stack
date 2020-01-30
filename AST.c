@@ -7,8 +7,8 @@ int Decl_num=0; // Decl_AStの時，一度だけ .data 0x10004000を表示する
 int def_n=0; // defineの時に，identの処理を行わない
 int ast_n = 0;
 int main_num=0;
-int loop_num=0;
-int if_num=0;
+int loop_num=1;
+int if_num=1;
 
 
 int t_reg=0; //レジスタ$t　の引数
@@ -48,10 +48,27 @@ Node *build_3_child(NType t,Node *p1,Node *p2,Node *p3){
     p->type=t;
     p->child = p1;
     p1->brother = p2;
-    p1->brother = p3;
+    p2->brother = p3;
     p->brother=NULL;
     return p;
 }
+
+
+Node *build_4_child(NType t,Node *p1,Node *p2,Node *p3,Node *p4){
+    Node *p;
+    if((p = (Node *)malloc(sizeof(Node))) == NULL){
+        yyerror("out of memory");
+    }
+    p->type=t;
+    p->child = p1;
+    p1->brother = p2;
+    p2->brother = p3;
+    p3->brother = p4;
+    p->brother=NULL;
+    return p;
+}
+
+
 
 Node *build_num_node(NType t,int n){
     Node *p;
@@ -163,12 +180,12 @@ void printTree(Node *p,FILE *fp){
             make_init(fp);
             printf("PROGRAM\n");
             checkNode(p,fp);
-            fprintf(fp,"$EXIT: \n \tjr   $ra \n \tnop");
+            fprintf(fp,"$EXIT: \n \tjr   $ra \t;in Pro_AST \n \tnop");
             break;
         case Decl_AST:
             printf("DECLARATION\n");
             if(Decl_num==0){
-                fprintf(fp,"\t.data   0x10004000\n");
+                fprintf(fp,"\t.data   0x10004000 \t;in Decl_AST \n");
                 Decl_num++;
             }
             checkNode(p,fp);
@@ -180,11 +197,14 @@ void printTree(Node *p,FILE *fp){
         case Stmts_AST:
             printf("statements\n");
             if(main_num==0){
-            fprintf(fp,"\t.text 	0x00001000\n");
-            fprintf(fp,"main:\n");
+            fprintf(fp,"\t.text 	0x00001000 \t;in Stmts_AST \n");
+            fprintf(fp,"main: \t;in Stmts_AST \n");
             main_num++;
             }
-            checkNode(p,fp);
+            //checkNode(p,fp);
+
+            printTree(p->child,fp);  
+
             break;
         case Stmt_AST:
             printf("statement\n");
@@ -195,10 +215,10 @@ void printTree(Node *p,FILE *fp){
         case IDENT_AST:
             printf("%s\t",p->varName);
             if(def_n == 0){
-                fprintf(fp,"\tli   $t%d,%s\n",t_reg,p->varName);
+                fprintf(fp,"\tli   $t%d,%s  \t;in IDENT_AST \n",t_reg,p->varName);
                 if(ast_n != 0){
-                    fprintf(fp,"\tlw   $t%d,0($t%d)\n",t_reg+1,t_reg);
-                    fprintf(fp,"\tnop\n");
+                    fprintf(fp,"\tlw   $t%d,0($t%d) \t;in IDENT_AST \n",t_reg+1,t_reg);
+                    fprintf(fp,"\tnop \t;in IDENT_AST \n");
                     t_reg++;                   
                     a=t_reg;                    
                 }
@@ -208,7 +228,7 @@ void printTree(Node *p,FILE *fp){
             break;
         case NUM_AST:
             printf("%d\t",p->value);
-            fprintf(fp,"\tli   $t%d,%d\n",t_reg,p->value);
+            fprintf(fp,"\tli   $t%d,%d \t;in NUM_AST \n",t_reg,p->value);
             b=t_reg;
             //printf("!!%d!!\n",b);
             t_reg++;
@@ -234,7 +254,7 @@ void printTree(Node *p,FILE *fp){
 //////////DEFINE,ARRAY
         case DEFINE_AST:
             printf("DEFINE\n");
-            fprintf(fp,"%s:\t.word  0x0000\n",p->child->varName);
+            fprintf(fp,"%s:\t.word  0x0000 \t;in DEFINE_AST \n",p->child->varName);
             def_n=1;
             checkNode(p,fp);
             def_n=0;
@@ -251,58 +271,88 @@ void printTree(Node *p,FILE *fp){
             fprintf(fp,"$L%d:\n",loop_num);
             checkNode(p,fp);
             if(p->child->type != EQ_AST){
-                fprintf(fp,"\tbeq   $t%d,$zero,$L%d\n",t_reg,loop_num+1);
+                fprintf(fp,"\tbeq   $t%d,$zero,$L%d \t;in WHILE_AST \n",t_reg,loop_num+1);
             }
             if(p->child->type == EQ_AST){
-                fprintf(fp,"\tbne   $t%d,$t%d,$L%d\n",a,b,loop_num+1);
+                fprintf(fp,"\tbne   $t%d,$t%d,$L%d \t;in WHILE_AST \n",a,b,loop_num+1);
             }
             t_reg=0;
             printTree(p->child->brother,fp);
-            fprintf(fp,"\tj $L%d\n",loop_num);
-            fprintf(fp,"\tnop\n");
-            fprintf(fp,"$L%d:\n",loop_num+1);
+            fprintf(fp,"\tj $L%d \t;in WHILE_AST \n",loop_num);
+            fprintf(fp,"\tnop \t;in WHILE_AST \n");
+            fprintf(fp,"$L%d: \t;in WHILE_AST \n",loop_num+1);
             a=0;
             b=0;
             loop_num=loop_num+2;
             break;
         case IF_AST:
-/*
             printf("IF\n");
-            fprintf(fp,"$D%d:\n",if_num);
+            fprintf(fp,";!!!!!!!!!!IF!!!!!!!!!!!\n");
             checkNode(p,fp);
+      
             if(p->child->type != EQ_AST){
-                fprintf(fp,"\tbeq   $t%d,$zero,$D%d\n",t_reg,if_num+1);
+                fprintf(fp,"\tbeq   $t%d,$zero,$D%d \t;in IF_AST \n",t_reg,if_num);
             }
             if(p->child->type == EQ_AST){
-                fprintf(fp,"\tbne   $t%d,$t%d,$D%d\n",a,b,if_num+1);
+                fprintf(fp,"\tbne   $t%d,$t%d,$D%d \t;in IF_AST \n",a,b,if_num);
             }
             t_reg=0;
             printTree(p->child->brother,fp);
-            fprintf(fp,"\tnop\n");
-            fprintf(fp,"$D%d:\n",if_num+1);
+            if(p->child->brother->brother!=NULL){   //else if ,elseが存在する時
+            printTree(p->child->brother->brother,fp); 
+            }
+            fprintf(fp,"\tnop \t;in IF_AST\n");
+            fprintf(fp,"$D0: \t;in IF_AST\n");
             a=0;
             b=0;
-            if_num=if_num+2;
-*/
-
-            printf("IF\n");
-            //fprintf(fp,"$D%d:\n",if_num);
-            checkNode(p,fp);
-            if(p->child->type != EQ_AST){
-                fprintf(fp,"\tbeq   $t%d,$zero,$D%d\n",t_reg,if_num);
-            }
-            if(p->child->type == EQ_AST){
-                fprintf(fp,"\tbne   $t%d,$t%d,$D%d\n",a,b,if_num);
-            }
-            t_reg=0;
-            printTree(p->child->brother,fp);
-            fprintf(fp,"\tnop\n");
-            fprintf(fp,"$D%d:\n",if_num);
-            a=0;
-            b=0;
-            if_num=if_num+1;
-
+            if_num++;
             break;
+
+        case ELSEIF_AST:
+            fprintf(fp,";!!!!!!!!!!ELSEIF!!!!!!!!!!!\n");
+            printf("ELSEIF\n");
+
+            fprintf(fp,"\tj   $D0 \t;ELSEIF_AST \n ");
+            fprintf(fp,"\tnop \n");
+
+            fprintf(fp,"$D%d: \t;in ELSEIF_AST \n",if_num);
+            //checkNode(p,fp);      
+            printTree(p->child,fp);
+            if(p->child->type != EQ_AST){
+                if(p->brother !=NULL){
+                    fprintf(fp,"\tbeq   $t%d,$zero,$D%d \t;in ELSEIF_AST \n ",t_reg,if_num+1);
+                } else{
+                    fprintf(fp,"\tbeq   $t%d,$zero,$D0 \t;in ELSEIF_AST \n ",t_reg);
+                }
+            }
+            if(p->child->type == EQ_AST){
+                if(p->brother !=NULL){
+                fprintf(fp,"\tbne   $t%d,$t%d,$D%d \t;in ELSEIF_AST\n ",a,b,if_num+1);
+                } else{
+                    fprintf(fp,"\tbne   $t%d,$t%d,$D0 \t;in ELSEIF_AST\n ",a,b);
+                }
+            }
+            t_reg=0;
+            if_num++;
+            printTree(p->child->brother,fp);
+            if(p->brother!=NULL){
+                printTree(p->brother,fp);
+            }
+            t_reg=0;
+            a=0;
+            b=0;
+            break;
+
+        case ELSE_AST:
+            printf("ELSE\n");
+            fprintf(fp,";!!!!!!!!!!ELSE!!!!!!!!!!!\n");
+            fprintf(fp,"\tj   $D0 \t;in ELSE_AST \n");
+            fprintf(fp,"\tnop \t;in ELSE_AST \n");
+            fprintf(fp,"$D%d: \t;in ELSE_AST \n",if_num);
+            checkNode(p,fp);
+            if_num++;
+            break;            
+
 
 //////算術式
         case ASSIGN_AST:
