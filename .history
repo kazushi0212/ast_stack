@@ -1,6 +1,3 @@
-print 0x10004004
-bye
-run
 print 0x10004000
 print 0x10004004
 bye
@@ -494,6 +491,9 @@ print 0x10004012
 print 0x10004016
 bye
 step 4000
+bye
+step 4000
+print 0x10004000 0x10004001
 bye
 step 4000
 print 0x10004000 0x10004001
