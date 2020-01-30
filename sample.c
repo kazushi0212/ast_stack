@@ -1,6 +1,11 @@
-define a;
-define b;
-define c;
-a=10;
-b=2;
-c=b+2+1;
+define i;
+define fact;
+define x;
+
+fact = 1;
+i = 1;
+x=6;
+while(i < x) {
+   fact = fact * i;
+   i = i + 1;
+}

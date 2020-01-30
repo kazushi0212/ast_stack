@@ -115,7 +115,7 @@ stop:                   # if syscall return  \n\
         return 1;
     }
 
-    fp=fopen("test.asm","w")
+    fp=fopen("test.asm","w");
 
     printTree(top,fp);
     fclose(fp);

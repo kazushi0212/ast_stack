@@ -232,3 +232,43 @@ run
 print 0x10004000
 print 0x10004004
 bye
+run
+print 0x10004000
+print 0x10004004
+print 0x10004008
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+print 0x10004008
+bye
+run
+prin 0x10004000
+print 0x10004000
+print 0x10004004
+print 0x10004008
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye

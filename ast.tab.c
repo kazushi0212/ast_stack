@@ -1728,11 +1728,8 @@ stop:                   # if syscall return  \n\
         return 1;
     }
 
-    if((fp=fopen("test.asm","w"))==NULL){
-        fprintf(stderr, "ファイルのオープンに失敗しました.\n");
-        exit(1);    
-    }
-    //fprintf(fp,"%s\n",str);
+    fp=fopen("test.asm","w");
+
     printTree(top,fp);
     fclose(fp);
     return 0;
