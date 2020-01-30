@@ -247,7 +247,9 @@ void printTree(Node *p,FILE *fp){
 
             fprintf(fp,"$L%d:\n",loop_num);
             checkNode(p,fp);
-            fprintf(fp,"\tbeq   $t%d,$zero,$L%d\n",t_reg,loop_num+1);
+            if(p->child->type != EQ_AST){
+                fprintf(fp,"\tbeq   $t%d,$zero,$L%d\n",t_reg,loop_num+1);
+            }
             t_reg=0;
             printTree(p->child->brother,fp);
             fprintf(fp,"\tj $L%d\n",loop_num);
@@ -255,6 +257,7 @@ void printTree(Node *p,FILE *fp){
             fprintf(fp,"$L2:\n");
             a=0;
             b=0;
+            loop_num=loop_num+2;
             break;
         case IF_AST:
             printf("IF\n");
@@ -331,20 +334,23 @@ void printTree(Node *p,FILE *fp){
 
 //比較
         case EQ_AST:
+            ast_n=1;   //identでlwの処理がいる場合とで場合分け
             printf(" == \n");
-            checkNode(p,fp);
-           fprintf(fp,"    beq");
+            regcheck(p,fp);
+            fprintf(fp,"\tbne   $t%d,$t%d,$L%d\n",a,b,loop_num+1);
+            a=0;
+            b=0;
+            ast_n=0;     //初期化
+            tmp=0;
             break;
         case LT_AST:
             ast_n=1;   //identでlwの処理がいる場合とで場合分け
             printf(" < \n");
             regcheck(p,fp);
-
             fprintf(fp,"\tslt   $t%d,$t%d,$t%d\n",t_reg,a,b);
-
             a=0;
             b=0;
-            ast_n=0;     //identでlwの処理がいる場合とで場合分け
+            ast_n=0;     //初期化
             tmp=0;
             break;
 
@@ -352,16 +358,10 @@ void printTree(Node *p,FILE *fp){
             ast_n=1;   //identでlwの処理がいる場合とで場合分け
             printf(" > \n");
             regcheck(p,fp);
-
             fprintf(fp,"\tslt   $t%d,$t%d,$t%d\n",t_reg,b,a);
-            //fprintf(fp,"\tslt   $t%d,$t%d,$t%d\n",t_reg,t_reg-2,t_reg-1);
-            //fprintf(fp,"\tbeq   $t%d,$zero,$L%d\n",t_reg,loop_num+1);
-            //t_reg=0;
-           
-            //printTree(p->brother,fp);
             a=0;
             b=0;
-            ast_n=0;     //identでlwの処理がいる場合とで場合分け 
+            ast_n=0;     // 初期化
             tmp=0;
             break;
         default :

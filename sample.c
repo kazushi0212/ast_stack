@@ -2,9 +2,9 @@ define i;
 define fact;
 
 fact = 1;
-i = 5;
-while(i > 0) {
-   fact = fact * i;
-   i = i - 1;
+i = 0;
+
+while(i == 0) {
+    fact=2;
+    i=3;
 }
-fact=fact/2;

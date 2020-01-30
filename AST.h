@@ -10,10 +10,11 @@ typedef enum{
     Stmt_AST,
 
     IDENT_AST, //変数のノード型
-    NUM_AST,    
+    NUM_AST,  
+
     Expr_AST,
     Term_AST,
-    Factor_AST,
+    Factor_AST,  //IDENT,NUMの親ノード
  
     DEFINE_AST,
     ARRAY_AST,
@@ -27,7 +28,6 @@ typedef enum{
     DIV_AST,
     MOD_AST,
 
-    //COND_AST,
     EQ_AST,
     LT_AST,
     GT_AST,

@@ -31,43 +31,23 @@ main:
 	li   $t1,1
 	sw   $t1,0($t0)
 	li   $t0,i
-	li   $t1,5
+	li   $t1,0
 	sw   $t1,0($t0)
 $L1:
 	li   $t0,i
 	lw   $t1,0($t0)
 	nop
 	li   $t2,0
-	slt   $t3,$t2,$t1
-	beq   $t3,$zero,$L2
+	bne   $t1,$t2,$L2
 	li   $t0,fact
-	li   $t1,fact
-	lw   $t2,0($t1)
-	nop
-	li   $t3,i
-	lw   $t4,0($t3)
-	nop
-	mult   $t2,$t4
-	mflo   $t5
-	sw   $t5,0($t0)
+	li   $t1,2
+	sw   $t1,0($t0)
 	li   $t0,i
-	li   $t1,i
-	lw   $t2,0($t1)
-	nop
-	li   $t3,1
-	sub   $t4,$t2,$t3
-	sw   $t4,0($t0)
+	li   $t1,3
+	sw   $t1,0($t0)
 	j $L1
 	nop
 $L2:
-	li   $t0,fact
-	li   $t1,fact
-	lw   $t2,0($t1)
-	nop
-	li   $t3,2
-	div   $t2,$t3
-	mflo   $t4
-	sw   $t4,0($t0)
 $EXIT: 
  	jr   $ra 
  	nop
