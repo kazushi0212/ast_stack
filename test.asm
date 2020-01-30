@@ -28,30 +28,21 @@ fact:	.word  0x0000
 	.text 	0x00001000
 main:
 	li   $t0,fact
-	li   $t1,4
+	li   $t1,1
 	sw   $t1,0($t0)
 	li   $t0,i
-	li   $t1,2
+	li   $t1,1
 	sw   $t1,0($t0)
 	li   $t0,i
-	li   $t1,i
-	lw   $t2,0($t1)
+	lw   $t1,0($t0)
 	nop
-	li   $t3,1
-	add   $t4,$t2,$t3
-	sw   $t4,0($t0)
-	li   $t0,fact
-	li   $t1,fact
-	lw   $t2,0($t1)
+	li   $t2,2
+	bne   $t1,$t2,$D0
+	li   $t0,i
+	li   $t1,0
+	sw   $t1,0($t0)
 	nop
-	li   $t3,2
-	mult   $t2,$t3
-	mflo   $t4
-	li   $t5,i
-	lw   $t6,0($t5)
-	nop
-	sub   $t7,$t4,$t6
-	sw   $t7,0($t0)
+$D0:
 $EXIT: 
  	jr   $ra 
  	nop

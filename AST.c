@@ -266,6 +266,7 @@ void printTree(Node *p,FILE *fp){
             loop_num=loop_num+2;
             break;
         case IF_AST:
+/*
             printf("IF\n");
             fprintf(fp,"$D%d:\n",if_num);
             checkNode(p,fp);
@@ -277,12 +278,30 @@ void printTree(Node *p,FILE *fp){
             }
             t_reg=0;
             printTree(p->child->brother,fp);
-            //fprintf(fp,"\tj $D%d\n",if_num);
             fprintf(fp,"\tnop\n");
             fprintf(fp,"$D%d:\n",if_num+1);
             a=0;
             b=0;
             if_num=if_num+2;
+*/
+
+            printf("IF\n");
+            //fprintf(fp,"$D%d:\n",if_num);
+            checkNode(p,fp);
+            if(p->child->type != EQ_AST){
+                fprintf(fp,"\tbeq   $t%d,$zero,$D%d\n",t_reg,if_num);
+            }
+            if(p->child->type == EQ_AST){
+                fprintf(fp,"\tbne   $t%d,$t%d,$D%d\n",a,b,if_num);
+            }
+            t_reg=0;
+            printTree(p->child->brother,fp);
+            fprintf(fp,"\tnop\n");
+            fprintf(fp,"$D%d:\n",if_num);
+            a=0;
+            b=0;
+            if_num=if_num+1;
+
             break;
 
 //////算術式

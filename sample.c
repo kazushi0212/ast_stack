@@ -1,8 +1,10 @@
 define i;
 define fact;
 
-fact = 4;
-i = 2;
-
-i=i+1;
-fact=fact*2-i;
+fact = 1;
+i = 1;
+if(i==2){
+    i=5;
+}else{
+    i=0;
+}
