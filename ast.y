@@ -78,10 +78,7 @@ cond_else : ELSE L_BRACE statements R_BRACE {$$=build_1_child(ELSE_AST,$3);}
 
 cond_elseif : 
 ELSEIF L_PARAM condition R_PARAM L_BRACE statements R_BRACE  {$$=build_child(ELSEIF_AST,$3,$6);}
-//ELSEIF L_PARAM condition R_PARAM L_BRACE statements R_BRACE {$$=build_child(ELSEIF_AST,$3,$6);}
-/*
-| ELSE IF L_PARAM condition R_PARAM L_BRACE statements R_BRACE cond_elseif{$$=build_3_child(ELSEIF_AST,$3,$6,$8);}
-*/
+| ELSEIF L_PARAM condition R_PARAM L_BRACE statements R_BRACE cond_elseif{$$=build_3_child(ELSEIF_AST,$3,$6,$8);}
 ;
 
 

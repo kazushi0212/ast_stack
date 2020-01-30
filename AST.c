@@ -9,7 +9,7 @@ int ast_n = 0;
 int main_num=0;
 int loop_num=1;
 int if_num=1;
-
+int else_count=0;
 
 int t_reg=0; //レジスタ$t　の引数
 int a=0;
@@ -292,9 +292,11 @@ void printTree(Node *p,FILE *fp){
       
             if(p->child->type != EQ_AST){
                 fprintf(fp,"\tbeq   $t%d,$zero,$D%d \t;in IF_AST \n",t_reg,if_num);
+                else_count++;
             }
             if(p->child->type == EQ_AST){
                 fprintf(fp,"\tbne   $t%d,$t%d,$D%d \t;in IF_AST \n",a,b,if_num);
+                else_count++;
             }
             t_reg=0;
             printTree(p->child->brother,fp);
@@ -303,6 +305,8 @@ void printTree(Node *p,FILE *fp){
             }
             fprintf(fp,"\tnop \t;in IF_AST\n");
             fprintf(fp,"$D0: \t;in IF_AST\n");
+            
+            fprintf(fp,"$D%d:\n",if_num); //if文の終点のラベル
             a=0;
             b=0;
             if_num++;
@@ -311,30 +315,36 @@ void printTree(Node *p,FILE *fp){
         case ELSEIF_AST:
             fprintf(fp,";!!!!!!!!!!ELSEIF!!!!!!!!!!!\n");
             printf("ELSEIF\n");
-
             fprintf(fp,"\tj   $D0 \t;ELSEIF_AST \n ");
             fprintf(fp,"\tnop \n");
-
             fprintf(fp,"$D%d: \t;in ELSEIF_AST \n",if_num);
-            //checkNode(p,fp);      
+          
             printTree(p->child,fp);
+
             if(p->child->type != EQ_AST){
-                if(p->brother !=NULL){
+                if(p->brother !=NULL || else_count!=0){
                     fprintf(fp,"\tbeq   $t%d,$zero,$D%d \t;in ELSEIF_AST \n ",t_reg,if_num+1);
-                } else{
+                    else_count++;
+                } else {
                     fprintf(fp,"\tbeq   $t%d,$zero,$D0 \t;in ELSEIF_AST \n ",t_reg);
                 }
             }
             if(p->child->type == EQ_AST){
-                if(p->brother !=NULL){
+                if(p->brother !=NULL || else_count!=0){
                 fprintf(fp,"\tbne   $t%d,$t%d,$D%d \t;in ELSEIF_AST\n ",a,b,if_num+1);
+                else_count++;
                 } else{
                     fprintf(fp,"\tbne   $t%d,$t%d,$D0 \t;in ELSEIF_AST\n ",a,b);
                 }
-            }
+            }    
             t_reg=0;
             if_num++;
             printTree(p->child->brother,fp);
+
+            if(p->child->brother->brother!=NULL){
+                printTree(p->child->brother->brother,fp);
+            }
+
             if(p->brother!=NULL){
                 printTree(p->brother,fp);
             }
