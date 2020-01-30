@@ -12,8 +12,8 @@ int loop_num=1;
 int t_reg=0; //レジスタ$t　の引数
 int a=0;
 int b=0;   //算術式の際適切なt_regを指定
-
-//SimTableEntry simTable[100];
+int tmp=0;
+ 
 Node *build_1_child(NType t,Node *p1){
     Node *p;
     if((p = (Node *)malloc(sizeof(Node))) == NULL){
@@ -115,14 +115,44 @@ stop:                   # if syscall return  \n\
 
 void checkNode(Node *p,FILE *fp){
   if(p->child != NULL){
-    printTree(p->child,fp);
+      printTree(p->child,fp);
   }
 
   if(p->brother != NULL){
-    printTree(p->brother,fp);
+      printTree(p->brother,fp);
   } 
 }
 
+void regcheck(Node *p,FILE *fp){
+    printTree(p->child,fp);
+            if(a!=0 && b==0){
+                tmp=a;
+            }
+            if(b!=0 && a==0){
+                tmp=b;
+            }           
+            ast_n=1; //identでlwの処理を行うかどうか
+    
+            if(p->child->brother != NULL){
+                ast_n=1; //identでlwの処理を行うかどうか,項が3以上の算術式の時の変数呼び出しに必要
+                printTree(p->child->brother,fp);
+            } 
+
+
+            if(a!=0 && b==0){
+                b=a;
+                a=tmp;
+            }
+            if(a==0 && b!=0){
+                a=tmp;
+            }
+
+            if(a>b){
+                tmp=a;
+                a=b;
+                b=tmp;
+            }
+}
 void printTree(Node *p,FILE *fp){
   if(p != NULL){
         switch(p->type){
@@ -166,35 +196,36 @@ void printTree(Node *p,FILE *fp){
                 if(ast_n != 0){
                     fprintf(fp,"\tlw   $t%d,0($t%d)\n",t_reg+1,t_reg);
                     fprintf(fp,"\tnop\n");
-                    t_reg++;
-                    if(a==0){
-                        a=t_reg;
-                    }
+                    t_reg++;                   
+                        a=t_reg;                    
                 }
                 t_reg++;
             }
-            checkNode(p,fp);
+            //checkNode(p,fp);
             break;
         case NUM_AST:
             printf("%d\t",p->value);
             fprintf(fp,"\tli   $t%d,%d\n",t_reg,p->value);
-            if(b==0){
-                b=t_reg;
-            }
+            b=t_reg;
+            //printf("!!%d!!\n",b);
             t_reg++;
-            checkNode(p,fp);
+            //checkNode(p,fp);
             break;
 
         case Expr_AST:
             printf("expression\n");
-            checkNode(p,fp);            break;
+            printTree(p->child,fp);
+            //checkNode(p,fp);            
+            break;
         case Term_AST:
             printf("term\n");
-            checkNode(p,fp);
+            printTree(p->child,fp);
+            //checkNode(p,fp);
             break;
         case Factor_AST:
             printf("factor\n");
-            checkNode(p,fp);
+            printTree(p->child,fp);
+            //checkNode(p,fp);
             break;
             
 //////////DEFINE,ARRAY
@@ -233,7 +264,9 @@ void printTree(Node *p,FILE *fp){
 //////算術式
         case ASSIGN_AST:
             printf(" = \n");
-            checkNode(p,fp);
+            //checkNode(p,fp);
+            printTree(p->child,fp);
+            printTree(p->child->brother,fp);
             fprintf(fp,"\tsw   $t%d,0($t0)\n",t_reg-1);
             t_reg=0;
             a=0;
@@ -243,40 +276,60 @@ void printTree(Node *p,FILE *fp){
         case ADD_AST:
             ast_n=1; //identでlwの処理を行うかどうか
             printf(" + \n");
-            checkNode(p,fp);
 
-            if((a>b||a==0) && b!=0){
-                a=b;
-            }
-            fprintf(fp,"\tadd   $t%d,$t%d,$t%d\n",t_reg,a,t_reg-1);
+            regcheck(p,fp);
+            fprintf(fp,"\tadd   $t%d,$t%d,$t%d\n",t_reg,a,b);
+
             ast_n=0; //初期化
-            a=0;
             t_reg++;
+            a=t_reg-1;
+            b=t_reg;
+            tmp=0;
             break;
            
         case SUB_AST:
+            ast_n=1; //identでlwの処理を行うかどうか
             printf(" - \n");
-            checkNode(p,fp);
+
+            regcheck(p,fp);
+            fprintf(fp,"\tsub   $t%d,$t%d,$t%d\n",t_reg,a,b);
+
+            ast_n=0; //初期化
+            t_reg++;
+            a=t_reg-1;
+            b=t_reg;
+            tmp=0;
             break;
         case MUL_AST:
-            printf(" * \n");
             ast_n=1; //identでlwの処理を行うかどうか
-            checkNode(p,fp);
+            printf(" * \n");
+            regcheck(p,fp);
 
-            if((a>b||a==0) && b!=0){
-                a=b;
-            }
-
-            fprintf(fp,"\tmult   $t%d,$t%d\n",t_reg-1,a);
+            fprintf(fp,"\tmult   $t%d,$t%d\n",a,b);
             fprintf(fp,"\tmflo   $t%d\n",t_reg);
+
             ast_n=0; //初期化
-            a=0;
             t_reg++;
+            a=t_reg-1;
+            b=t_reg;
+            tmp=0;
             break;
         case DIV_AST:
-            printf(" / \n");
-            checkNode(p,fp);
+            ast_n=1; //identでlwの処理を行うかどうか
+            printf(" / \n");        
+            regcheck(p,fp);
+   
+            fprintf(fp,"\tdiv   $t%d,$t%d\n",a,b);
+            fprintf(fp,"\tmflo   $t%d\n",t_reg);
+
+            ast_n=0; //初期化
+            t_reg++;
+            a=t_reg-1;
+            b=t_reg;
+            tmp=0;
             break;
+
+//比較
         case EQ_AST:
             printf(" == \n");
             checkNode(p,fp);
@@ -285,24 +338,31 @@ void printTree(Node *p,FILE *fp){
         case LT_AST:
             ast_n=1;   //identでlwの処理がいる場合とで場合分け
             printf(" < \n");
-            printTree(p->child,fp);
-            
-            if((a>b||a==0) && b!=0){
-                a=b;
-            }
-            fprintf(fp,"\tslt   $t%d,$t%d,$t%d\n",t_reg,a,t_reg-1);
+            regcheck(p,fp);
+
+            fprintf(fp,"\tslt   $t%d,$t%d,$t%d\n",t_reg,a,b);
+
+            a=0;
+            b=0;
+            ast_n=0;     //identでlwの処理がいる場合とで場合分け
+            tmp=0;
+            break;
+
+        case GT_AST:
+            ast_n=1;   //identでlwの処理がいる場合とで場合分け
+            printf(" > \n");
+            regcheck(p,fp);
+
+            fprintf(fp,"\tslt   $t%d,$t%d,$t%d\n",t_reg,b,a);
             //fprintf(fp,"\tslt   $t%d,$t%d,$t%d\n",t_reg,t_reg-2,t_reg-1);
             //fprintf(fp,"\tbeq   $t%d,$zero,$L%d\n",t_reg,loop_num+1);
             //t_reg=0;
            
             //printTree(p->brother,fp);
             a=0;
-            ast_n=0;     //identでlwの処理がいる場合とで場合分け    
-            break;
-        case GT_AST:
-            printf(" > \n");
-            fprintf(fp,"    ");
-            checkNode(p,fp);
+            b=0;
+            ast_n=0;     //identでlwの処理がいる場合とで場合分け 
+            tmp=0;
             break;
         default :
             fprintf(stderr,"print error\n");

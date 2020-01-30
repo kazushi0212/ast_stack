@@ -272,3 +272,173 @@ run
 print 0x10004000
 print 0x10004004
 bye
+print 0x10004000
+print 0x10004004
+bye
+print 0x10004000
+print 0x10004004
+print 0x10004000
+bye
+print 0x10004000
+print 0x10004004
+print 0x10004008
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+print 0x10004008
+bye
+run
+print 0x10004008
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+print 0x10004008
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+prin 0x10004000
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004004
+print 0x10004000
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004004
+bye
+run
+print 0x10004004
+bye
+run
+print 0x10004004
+bye
+run
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004004
+bye

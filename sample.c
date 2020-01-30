@@ -1,11 +1,10 @@
 define i;
 define fact;
-define x;
 
 fact = 1;
-i = 1;
-x=6;
-while(i < x) {
+i = 5;
+while(i > 0) {
    fact = fact * i;
-   i = i + 1;
+   i = i - 1;
 }
+fact=fact/2;
