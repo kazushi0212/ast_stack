@@ -7,9 +7,11 @@ int Decl_num=0; // Decl_AStの時，一度だけ .data 0x10004000を表示する
 int def_n=0; // defineの時に，identの処理を行わない
 int ast_n = 0;
 int main_num=0;
-int loop_num=1;
-int if_num=1;
+int loop_num=0;
+int loop_rec=0;
+int if_num=0;
 int else_count=0;
+int if_end_num=0;
 
 int t_reg=0; //レジスタ$t　の引数
 int a=0;
@@ -155,9 +157,17 @@ void regcheck(Node *p,FILE *fp){
     
             if(p->child->brother != NULL){
                 ast_n=1; //identでlwの処理を行うかどうか,項が3以上の算術式の時の変数呼び出しに必要
+
+              if(t_reg>9){  //レジスタの利用規則0~9までの確認用
+                    printf("\n The current reg_num %d is bigger than reg_num 9 of the rule!\n",t_reg);
+                }
+
                 printTree(p->child->brother,fp);
             } 
-
+            
+            if(t_reg>9){   //レジスタの利用規則0~9までの確認用
+                printf("\n The current reg_num %d is bigger than 9 !\n",t_reg);
+            }
 
             if(a!=0 && b==0){
                 b=a;
@@ -268,22 +278,24 @@ void printTree(Node *p,FILE *fp){
         case WHILE_AST:
             printf("WHILE\n");
 
-            fprintf(fp,"$L%d:\n",loop_num);
+            fprintf(fp,"$L%d_%d:\n",loop_rec,loop_num);
             checkNode(p,fp);
             if(p->child->type != EQ_AST){
-                fprintf(fp,"\tbeq   $t%d,$zero,$L%d \t;in WHILE_AST \n",t_reg,loop_num+1);
+                fprintf(fp,"\tbeq   $t%d,$zero,$L%d_%d \t;in WHILE_AST \n",t_reg,loop_rec,loop_num+1);
             }
             if(p->child->type == EQ_AST){
-                fprintf(fp,"\tbne   $t%d,$t%d,$L%d \t;in WHILE_AST \n",a,b,loop_num+1);
+                fprintf(fp,"\tbne   $t%d,$t%d,$L%d_%d \t;in WHILE_AST \n",a,b,loop_rec,loop_num+1);
             }
             t_reg=0;
+            loop_rec++;
             printTree(p->child->brother,fp);
-            fprintf(fp,"\tj $L%d \t;in WHILE_AST \n",loop_num);
+            loop_rec--;
+            fprintf(fp,"\tj $L%d_%d \t;in WHILE_AST \n",loop_rec,loop_num);
             fprintf(fp,"\tnop \t;in WHILE_AST \n");
-            fprintf(fp,"$L%d: \t;in WHILE_AST \n",loop_num+1);
+            fprintf(fp,"$L%d_%d: \t;in WHILE_AST \n",loop_rec,loop_num+1);
+            if(loop_rec==0) loop_num=loop_num+2;
             a=0;
             b=0;
-            loop_num=loop_num+2;
             break;
         case IF_AST:
             printf("IF\n");
@@ -304,18 +316,19 @@ void printTree(Node *p,FILE *fp){
             printTree(p->child->brother->brother,fp); 
             }
             fprintf(fp,"\tnop \t;in IF_AST\n");
-            fprintf(fp,"$D0: \t;in IF_AST\n");
+            fprintf(fp,"$D0_%d: \t;in IF_AST\n",if_end_num);
             
             fprintf(fp,"$D%d:\n",if_num); //if文の終点のラベル
             a=0;
             b=0;
             if_num++;
+            if_end_num++;
             break;
 
         case ELSEIF_AST:
             fprintf(fp,";!!!!!!!!!!ELSEIF!!!!!!!!!!!\n");
             printf("ELSEIF\n");
-            fprintf(fp,"\tj   $D0 \t;ELSEIF_AST \n ");
+            fprintf(fp,"\tj   $D0_%d \t;ELSEIF_AST \n ",if_end_num);
             fprintf(fp,"\tnop \n");
             fprintf(fp,"$D%d: \t;in ELSEIF_AST \n",if_num);
           
@@ -334,7 +347,7 @@ void printTree(Node *p,FILE *fp){
                 fprintf(fp,"\tbne   $t%d,$t%d,$D%d \t;in ELSEIF_AST\n ",a,b,if_num+1);
                 else_count++;
                 } else{
-                    fprintf(fp,"\tbne   $t%d,$t%d,$D0 \t;in ELSEIF_AST\n ",a,b);
+                    fprintf(fp,"\tbne   $t%d,$t%d,$D0_%d \t;in ELSEIF_AST\n ",a,b,if_end_num);
                 }
             }    
             t_reg=0;
@@ -356,7 +369,7 @@ void printTree(Node *p,FILE *fp){
         case ELSE_AST:
             printf("ELSE\n");
             fprintf(fp,";!!!!!!!!!!ELSE!!!!!!!!!!!\n");
-            fprintf(fp,"\tj   $D0 \t;in ELSE_AST \n");
+            fprintf(fp,"\tj   $D0_%d \t;in ELSE_AST \n",if_end_num);
             fprintf(fp,"\tnop \t;in ELSE_AST \n");
             fprintf(fp,"$D%d: \t;in ELSE_AST \n",if_num);
             checkNode(p,fp);
@@ -431,6 +444,22 @@ void printTree(Node *p,FILE *fp){
             b=t_reg-1;
             tmp=0;
             break;
+
+        case MOD_AST:
+            ast_n=1; //identでlwの処理を行うかどうか
+            printf(" / \n");        
+            regcheck(p,fp);
+   
+            fprintf(fp,"\tdiv   $t%d,$t%d\n",a,b);
+            fprintf(fp,"\tmfhi   $t%d\n",t_reg);
+
+            ast_n=0; //初期化
+            t_reg++;
+            a=t_reg-1;
+            b=t_reg-1;
+            tmp=0;
+            break;
+
 
 //比較
         case EQ_AST:

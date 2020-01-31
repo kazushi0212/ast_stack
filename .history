@@ -10,143 +10,6 @@ print 0x10004000
 print 0x10004004
 bye
 run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-print 0x10004008
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-prin 0x10004000
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004004
-print 0x10004000
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004004
-bye
-run
-print 0x10004004
-bye
-run
-print 0x10004004
-bye
-run
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
-print 0x10004000
-print 0x10004004
-bye
-run
 prin 0x10004000
 print 0x10004000
 print 0x10004004
@@ -496,5 +359,142 @@ step 4000
 print 0x10004000 0x10004001
 bye
 step 4000
+print 0x10004000 0x10004001
+bye
+step 4000
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+print 0x10004000
+print 0x10004004
+bye
+run
+step 4000
+bye
+step 4000
+print 0x10004000 0x10004001
+bye
+step 4000
+print 0x10004000 0x10004001
+bey
+bye
+step 4000
+print 0x10004000 0x10004001
+bye
+step 4000
+print 0x10004000 0x10004001
+bye
+step 4000
+print 0x10004000 0x10004001
+bye
+run
+bye
+step5000
+step 5000
+bye
+step 100000
+bye
+step 4000
+bye
+step 4000
+bye
+step 4000
+bye
+step 100000
+bye
+step 400000
+bye
+step 4000
+print 0x10004000 0x10004001
+bye
+step 4000
+print 0x10004000 0x10004001
+bye
+step 4000
+print 0x10004000 0x10004001
+bye
+step 4000
+print 0x10004000 0x10004001
+bye
+run
+bye
+run
+print 0x10004000 0x10004001
+bye
+run
+print 0x10004000 0x10004001
+bye
+run
+print 0x10004000 0x10004001
+bye
+run
+bye
+run
+print 0x10004000 0x10004001
+bye
+run
+bye
+run
+bye
+run
+print 0x10004000 0x10004001
+bye
+run
+bye
+run
+bye
+run
+bye
+step 4000
+print 0x10004000 0x10004001
+bye
+run
+print 0x10004000 0x10004001
+bye
+run
+print 0x10004000 0x10004001
+bye
+run
+bye
+run
+print 0x10004000 0x10004001
+bye
+run
+bye
+run
+print 0x10004000 0x10004001
+bye
+run
+print 0x10004000 0x10004001
+bye
+step 4000
+print 0x10004000 0x10004001
+bye
+step 4000
+print 0x10004000 0x10004001
+bye
+run
+bye
+run
+print 0x10004000 0x10004001
+bye
+run
+step4000
+step 4000
+print 0x10004000 0x10004001
+bye
+run
+bye
+run
+print 0x10004000 0x10004001
+bye
+print 0x10004000 0x10004001
+run
+print 0x10004000 0x10004001
+bye
+run
 print 0x10004000 0x10004001
 bye
