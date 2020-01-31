@@ -23,33 +23,68 @@ stop:                   # if syscall return
     nop             # (delay slot) 
 
 	.data   0x10004000 	;in Decl_AST 
+N:	.word  0x0000 	;in DEFINE_AST 
 i:	.word  0x0000 	;in DEFINE_AST 
-fact:	.word  0x0000 	;in DEFINE_AST 
+n:	.word  0x0000 	;in DEFINE_AST 
+k:	.word  0x0000 	;in DEFINE_AST 
 	.text 	0x00001000 	;in Stmts_AST 
 main: 	;in Stmts_AST 
-	li   $t0,fact  	;in IDENT_AST 
-	li   $t1,1 	;in NUM_AST 
+	li   $t0,N  	;in IDENT_AST 
+	li   $t1,10 	;in NUM_AST 
 	sw   $t1,0($t0)
 	li   $t0,i  	;in IDENT_AST 
-	li   $t1,1 	;in NUM_AST 
+	li   $t1,2 	;in NUM_AST 
 	sw   $t1,0($t0)
 $L0_0:
 	li   $t0,i  	;in IDENT_AST 
 	lw   $t1,0($t0) 	;in IDENT_AST 
 	nop 	;in IDENT_AST 
+	li   $t2,N  	;in IDENT_AST 
+	lw   $t3,0($t2) 	;in IDENT_AST 
+	nop 	;in IDENT_AST 
+	li   $t4,2 	;in NUM_AST 
+	div   $t3,$t4
+	mflo   $t5
+	slt   $t6,$t1,$t5
+	beq   $t6,$zero,$L0_1 	;in WHILE_AST 
+	li   $t0,n  	;in IDENT_AST 
+	li   $t1,2 	;in NUM_AST 
+	sw   $t1,0($t0)
+$L1_0:
+	li   $t0,n  	;in IDENT_AST 
+	lw   $t1,0($t0) 	;in IDENT_AST 
+	nop 	;in IDENT_AST 
 	li   $t2,6 	;in NUM_AST 
 	slt   $t3,$t1,$t2
-	beq   $t3,$zero,$L0_1 	;in WHILE_AST 
-	li   $t0,fact  	;in IDENT_AST 
-	li   $t1,fact  	;in IDENT_AST 
+	beq   $t3,$zero,$L1_1 	;in WHILE_AST 
+	li   $t0,n  	;in IDENT_AST 
+	li   $t1,n  	;in IDENT_AST 
 	lw   $t2,0($t1) 	;in IDENT_AST 
 	nop 	;in IDENT_AST 
-	li   $t3,i  	;in IDENT_AST 
+	li   $t3,2 	;in NUM_AST 
+	mult   $t2,$t3
+	mflo   $t4
+	sw   $t4,0($t0)
+	li   $t0,k  	;in IDENT_AST 
+	li   $t1,i  	;in IDENT_AST 
+	lw   $t2,0($t1) 	;in IDENT_AST 
+	nop 	;in IDENT_AST 
+	li   $t3,n  	;in IDENT_AST 
 	lw   $t4,0($t3) 	;in IDENT_AST 
 	nop 	;in IDENT_AST 
 	mult   $t2,$t4
 	mflo   $t5
 	sw   $t5,0($t0)
+	li   $t0,n  	;in IDENT_AST 
+	li   $t1,n  	;in IDENT_AST 
+	lw   $t2,0($t1) 	;in IDENT_AST 
+	nop 	;in IDENT_AST 
+	li   $t3,1 	;in NUM_AST 
+	add   $t4,$t2,$t3
+	sw   $t4,0($t0)
+	j $L1_0 	;in WHILE_AST 
+	nop 	;in WHILE_AST 
+$L1_1: 	;in WHILE_AST 
 	li   $t0,i  	;in IDENT_AST 
 	li   $t1,i  	;in IDENT_AST 
 	lw   $t2,0($t1) 	;in IDENT_AST 

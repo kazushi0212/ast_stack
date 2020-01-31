@@ -1,3 +1,9 @@
+define N;
 define i;
+define n;
+define k;
 
-i=1+1+1+1+1+1+1;
+N = 1000;
+i = 1;
+i = N/2;
+

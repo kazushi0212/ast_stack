@@ -18,6 +18,11 @@ int a=0;
 int b=0;   //算術式の際適切なt_regを指定
 int tmp=0;
  
+
+//////////
+int LT_a=0;
+int LT_b=0;
+//////////
 Node *build_1_child(NType t,Node *p1){
     Node *p;
     if((p = (Node *)malloc(sizeof(Node))) == NULL){
@@ -146,6 +151,9 @@ void checkNode(Node *p,FILE *fp){
 
 
 void regcheck(Node *p,FILE *fp){
+    if(a!=0) a=0;
+    if(b!=0) b=0;
+
     printTree(p->child,fp);
             if(a!=0 && b==0){
                 tmp=a;
@@ -433,8 +441,9 @@ void printTree(Node *p,FILE *fp){
         case DIV_AST:
             ast_n=1; //identでlwの処理を行うかどうか
             printf(" / \n");        
+
             regcheck(p,fp);
-   
+            printf("!!!check3:a,%d,,b,%d!!!\n",a,b);
             fprintf(fp,"\tdiv   $t%d,$t%d\n",a,b);
             fprintf(fp,"\tmflo   $t%d\n",t_reg);
 
@@ -462,7 +471,7 @@ void printTree(Node *p,FILE *fp){
 
 
 //比較
-        case EQ_AST:
+        case EQ_AST: //右辺が算術式の時エラー
             ast_n=1;   //identでlwの処理がいる場合とで場合分け
             printf(" == \n");
             regcheck(p,fp);
@@ -474,7 +483,22 @@ void printTree(Node *p,FILE *fp){
             tmp=0;
 */
             break;
+
         case LT_AST:
+            printf(" < \n");
+            ast_n=1;
+            printTree(p->child,fp);
+            LT_a=a; 
+            printTree(p->child->brother,fp);
+            LT_b=t_reg-1;
+            fprintf(fp,"\tslt   $t%d,$t%d,$t%d\n",t_reg,LT_a,LT_b);
+            a=0;
+            b=0;
+            LT_a=0;
+            LT_b=0;
+            ast_n=0;
+            break;
+/*
             ast_n=1;   //identでlwの処理がいる場合とで場合分け
             printf(" < \n");
             regcheck(p,fp);
@@ -484,8 +508,23 @@ void printTree(Node *p,FILE *fp){
             ast_n=0;     //初期化
             tmp=0;
             break;
-
+*/
         case GT_AST:
+            printf(" < \n");
+            ast_n=1;
+            printTree(p->child,fp);
+            LT_a=a; //課題4のためだけ
+            printTree(p->child->brother,fp);
+
+            LT_b=t_reg-1;
+            fprintf(fp,"\tslt   $t%d,$t%d,$t%d\n",t_reg,LT_b,LT_a);
+            a=0;
+            b=0;
+            LT_a=0;
+            LT_b=0;
+            ast_n=0;
+            break;
+/*
             ast_n=1;   //identでlwの処理がいる場合とで場合分け
             printf(" > \n");
             regcheck(p,fp);
@@ -495,6 +534,15 @@ void printTree(Node *p,FILE *fp){
             ast_n=0;     // 初期化
             tmp=0;
             break;
+*/
+
+/*
+case LET_AST:
+先にイコールの判定をしてOKならwhileの処理にジャンプ，つぎに＜の判定をしてOKならwhileの処理にジャンプ
+whileにLET_ASTようの処理を追加し，判定前に$v0に1を入れておき，判定が正解なら1がはいり，不正解なら0がはいるので，whileでその判定を行う．
+
+*/
+
         default :
             fprintf(stderr,"print error\n");
         }
