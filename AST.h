@@ -63,9 +63,9 @@ Node *build_4_child(NType t,Node *p1,Node *p2,Node *p3,Node *p4);
 Node *build_num_node(NType t,int n);
 Node *build_ident_node(NType t,char *str);
 Node *build_array_node(NType t,char *str,int n);
-//Node *build_elseif_child(NType t,Node *p1,Node *p2,Node *p3);
-void printTree(Node *p,FILE *fp);
-void checkNode(Node *p,FILE *fp);
+
+void printTree(Node *p,FILE *text_fp,FILE *data_fp);
+void checkNode(Node *p,FILE *text_fp,FILE *data_fp);
 
 
 
