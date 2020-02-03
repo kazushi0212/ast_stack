@@ -99,7 +99,7 @@ int main(void){
     }
 
     text_fp=fopen("text.asm","w");
-    data_fp=fopen("data.s","w");
+    data_fp=fopen("data.asm","w");
     fp=fopen("test.asm","w");
 
     printTree(top,text_fp,data_fp);
@@ -112,10 +112,11 @@ int main(void){
     while ((c=fgetc(text_fp)) != EOF) {
       fputc(c, fp);
     }
+
     while ((c=fgetc(data_fp)) != EOF) {
       fputc(c, fp);
     }
-    
+  
     fclose(text_fp);
     fclose(data_fp);
         

@@ -1731,16 +1731,35 @@ yyreturn:
 
 
 int main(void){
-    FILE *fp;
-
+  FILE *text_fp,*data_fp,*fp;
+  char c;
     if(yyparse()){
         fprintf(stderr,"Error\n");
         return 1;
     }
 
+    text_fp=fopen("text.asm","w");
+    data_fp=fopen("data.asm","w");
     fp=fopen("test.asm","w");
 
-    printTree(top,fp);
+    printTree(top,text_fp,data_fp);
+    fclose(text_fp);
+    fclose(data_fp);
+    
+    text_fp = fopen("text.asm","r");
+    data_fp = fopen("data.asm","r");
+    
+    while ((c=fgetc(text_fp)) != EOF) {
+      fputc(c, fp);
+    }
+
+    while ((c=fgetc(data_fp)) != EOF) {
+      fputc(c, fp);
+    }
+  
+    fclose(text_fp);
+    fclose(data_fp);
+        
     fclose(fp);
     return 0;
 }
