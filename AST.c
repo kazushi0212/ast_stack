@@ -307,12 +307,10 @@ void printTree(Node *p,FILE *text_fp,FILE *data_fp){
             break;
 	    
         case ADD_AST:
-            fprintf(text_fp,";!!!ADD\n");
             checkNode(p,text_fp,data_fp);
-            fprintf(text_fp,";ADD!!!\n");
             fprintf(text_fp,"\tlw  $t0, %d($sp)\n",(stack_num-2)*4);
             fprintf(text_fp,"\tlw  $t1, %d($sp)\n\tnop\n",(stack_num-1)*4);
-            fprintf(text_fp,"\tadd  $v0, $t0, $t1\n\tnop\n");
+            fprintf(text_fp,"\tadd  $v0, $t0, $t1\n");
             stack_num=stack_num-2;
             fprintf(text_fp,"\tsw  $v0, %d($sp)\n",stack_num*4);
             stack_num++;

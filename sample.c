@@ -4,15 +4,9 @@ define i;
 N = 3;
 i = 0;
 
-if(N==0){
-    i=3;
-} else if (N==2){
-    i=100;
+if(N==2){
+    if(i==0){
+        i=i+1;
+    }
+    N=N+1;
 }
-else if(N==3){
-    i=i*2;
-}
-else{
-    i=5;
-}
-i=i+1;

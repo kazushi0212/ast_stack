@@ -27,282 +27,66 @@ main:
 
 	addi  $sp, $sp, -32
 	sw  $ra, 28($sp)
-	li  $v0, 0
+	li  $v0, 3
 	sw  $v0, 0($sp)
-	li   $t0, fizz
+	li   $t0, N
 	sw   $v0, 0($t0)
 	li  $v0, 0
-	sw  $v0, 0($sp)
-	li   $t0, buzz
-	sw   $v0, 0($t0)
-	li  $v0, 0
-	sw  $v0, 0($sp)
-	li   $t0, fizzbuzz
-	sw   $v0, 0($t0)
-	li  $v0, 0
-	sw  $v0, 0($sp)
-	li   $t0, others
-	sw   $v0, 0($t0)
-	li  $v0, 1
 	sw  $v0, 0($sp)
 	li   $t0, i
 	sw   $v0, 0($t0)
-$L0_0:
-;LT_AST1
-	li  $t0, i
+	li  $t0, N
 	lw  $v0, 0($t0)
 	nop
 	sw  $v0, 0($sp)
-	li  $v0, 31
-	sw  $v0, 4($sp)
-;LT_AST2
-	lw  $t0, 0($sp)
-	lw  $t1, 4($sp)
-	nop
-	slt   $v0,$t0,$t1
-	beq   $v0,$zero,$L0_1 	;in WHILE_AST 
-	li  $t0, i
-	lw  $v0, 0($t0)
-	nop
-	sw  $v0, 0($sp)
-	li  $v0, 15
-	sw  $v0, 4($sp)
-	lw  $t0, 0($sp)
-	lw  $t1, 4($sp)
-	nop
-	div  $t0, $t1
-	mfhi  $v0
-	sw  $v0, 0($sp)
-	li  $v0, 0
+	li  $v0, 2
 	sw  $v0, 4($sp)
 	lw  $t0, 0($sp)
 	lw  $t1, 4($sp)
 	nop
 	bne   $t0,$t1,$D0 	;in IF_AST 
-;!!!ADD
-	li  $t0, fizzbuzz
-	lw  $v0, 0($t0)
-	nop
-	sw  $v0, 8($sp)
-	li  $v0, 1
-	sw  $v0, 12($sp)
-;ADD!!!
-	lw  $t0, 8($sp)
-	lw  $t1, 12($sp)
-	nop
-	add  $v0, $t0, $t1
-	nop
-	sw  $v0, 8($sp)
-	li   $t0, fizzbuzz
-	sw   $v0, 0($t0)
-	j   $D0_0 	;ELSEIF_AST 
- 	nop 
-$D0: 	;in ELSEIF_AST 
 	li  $t0, i
 	lw  $v0, 0($t0)
 	nop
-	sw  $v0, 0($sp)
-	li  $v0, 3
-	sw  $v0, 4($sp)
-	lw  $t0, 0($sp)
-	lw  $t1, 4($sp)
-	nop
-	div  $t0, $t1
-	mfhi  $v0
-	sw  $v0, 0($sp)
-	li  $v0, 0
-	sw  $v0, 4($sp)
-	lw  $t0, 0($sp)
-	lw  $t1, 4($sp)
-	nop
-	bne   $t0,$t1,$D1 	;in ELSEIF_AST
- ;!!!ADD
-	li  $t0, fizz
-	lw  $v0, 0($t0)
-	nop
 	sw  $v0, 8($sp)
-	li  $v0, 1
+	li  $v0, 0
 	sw  $v0, 12($sp)
-;ADD!!!
 	lw  $t0, 8($sp)
 	lw  $t1, 12($sp)
 	nop
-	add  $v0, $t0, $t1
-	nop
-	sw  $v0, 8($sp)
-	li   $t0, fizz
-	sw   $v0, 0($t0)
-	j   $D0_0 	;ELSEIF_AST 
- 	nop 
-$D1: 	;in ELSEIF_AST 
+	bne   $t0,$t1,$D0 	;in IF_AST 
 	li  $t0, i
 	lw  $v0, 0($t0)
 	nop
-	sw  $v0, 0($sp)
-	li  $v0, 5
-	sw  $v0, 4($sp)
-	lw  $t0, 0($sp)
-	lw  $t1, 4($sp)
-	nop
-	div  $t0, $t1
-	mfhi  $v0
-	sw  $v0, 0($sp)
-	li  $v0, 0
-	sw  $v0, 4($sp)
-	lw  $t0, 0($sp)
-	lw  $t1, 4($sp)
-	nop
-	bne   $t0,$t1,$D2 	;in ELSEIF_AST
- ;!!!ADD
-	li  $t0, buzz
-	lw  $v0, 0($t0)
-	nop
-	sw  $v0, 8($sp)
+	sw  $v0, 16($sp)
 	li  $v0, 1
-	sw  $v0, 12($sp)
-;ADD!!!
-	lw  $t0, 8($sp)
-	lw  $t1, 12($sp)
+	sw  $v0, 20($sp)
+	lw  $t0, 16($sp)
+	lw  $t1, 20($sp)
 	nop
 	add  $v0, $t0, $t1
-	nop
-	sw  $v0, 8($sp)
-	li   $t0, buzz
-	sw   $v0, 0($t0)
-	j   $D0_0 	;in ELSE_AST 
-	nop 	;in ELSE_AST 
-$D2: 	;in ELSE_AST 
-;!!!ADD
-	li  $t0, others
-	lw  $v0, 0($t0)
-	nop
-	sw  $v0, 0($sp)
-	li  $v0, 1
-	sw  $v0, 4($sp)
-;ADD!!!
-	lw  $t0, 0($sp)
-	lw  $t1, 4($sp)
-	nop
-	add  $v0, $t0, $t1
-	nop
-	sw  $v0, 0($sp)
-	li   $t0, others
-	sw   $v0, 0($t0)
-	j   $D0_0 	;ELSEIF_AST 
- 	nop 
-$D3: 	;in ELSEIF_AST 
-	li  $t0, i
-	lw  $v0, 0($t0)
-	nop
-	sw  $v0, 0($sp)
-	li  $v0, 3
-	sw  $v0, 4($sp)
-	lw  $t0, 0($sp)
-	lw  $t1, 4($sp)
-	nop
-	div  $t0, $t1
-	mfhi  $v0
-	sw  $v0, 0($sp)
-	li  $v0, 0
-	sw  $v0, 4($sp)
-	lw  $t0, 0($sp)
-	lw  $t1, 4($sp)
-	nop
-	bne   $t0,$t1,$D4 	;in ELSEIF_AST
- ;!!!ADD
-	li  $t0, fizz
-	lw  $v0, 0($t0)
-	nop
-	sw  $v0, 8($sp)
-	li  $v0, 1
-	sw  $v0, 12($sp)
-;ADD!!!
-	lw  $t0, 8($sp)
-	lw  $t1, 12($sp)
-	nop
-	add  $v0, $t0, $t1
-	nop
-	sw  $v0, 8($sp)
-	li   $t0, fizz
-	sw   $v0, 0($t0)
-	j   $D0_0 	;ELSEIF_AST 
- 	nop 
-$D4: 	;in ELSEIF_AST 
-	li  $t0, i
-	lw  $v0, 0($t0)
-	nop
-	sw  $v0, 0($sp)
-	li  $v0, 5
-	sw  $v0, 4($sp)
-	lw  $t0, 0($sp)
-	lw  $t1, 4($sp)
-	nop
-	div  $t0, $t1
-	mfhi  $v0
-	sw  $v0, 0($sp)
-	li  $v0, 0
-	sw  $v0, 4($sp)
-	lw  $t0, 0($sp)
-	lw  $t1, 4($sp)
-	nop
-	bne   $t0,$t1,$D5 	;in ELSEIF_AST
- ;!!!ADD
-	li  $t0, buzz
-	lw  $v0, 0($t0)
-	nop
-	sw  $v0, 8($sp)
-	li  $v0, 1
-	sw  $v0, 12($sp)
-;ADD!!!
-	lw  $t0, 8($sp)
-	lw  $t1, 12($sp)
-	nop
-	add  $v0, $t0, $t1
-	nop
-	sw  $v0, 8($sp)
-	li   $t0, buzz
-	sw   $v0, 0($t0)
-	j   $D0_0 	;in ELSE_AST 
-	nop 	;in ELSE_AST 
-$D5: 	;in ELSE_AST 
-;!!!ADD
-	li  $t0, others
-	lw  $v0, 0($t0)
-	nop
-	sw  $v0, 0($sp)
-	li  $v0, 1
-	sw  $v0, 4($sp)
-;ADD!!!
-	lw  $t0, 0($sp)
-	lw  $t1, 4($sp)
-	nop
-	add  $v0, $t0, $t1
-	nop
-	sw  $v0, 0($sp)
-	li   $t0, others
+	sw  $v0, 16($sp)
+	li   $t0, i
 	sw   $v0, 0($t0)
 	nop 	;in IF_AST
 $D0_0: 	;in IF_AST
-$D6:
-;!!!ADD
-	li  $t0, i
+$D0:
+	li  $t0, N
 	lw  $v0, 0($t0)
 	nop
 	sw  $v0, 0($sp)
 	li  $v0, 1
 	sw  $v0, 4($sp)
-;ADD!!!
 	lw  $t0, 0($sp)
 	lw  $t1, 4($sp)
 	nop
 	add  $v0, $t0, $t1
-	nop
 	sw  $v0, 0($sp)
-	li   $t0, i
+	li   $t0, N
 	sw   $v0, 0($t0)
-	j $L0_0 	;in WHILE_AST 
-	nop 	;in WHILE_AST 
-$L0_1: 	;in WHILE_AST 
+	nop 	;in IF_AST
+$D0_1: 	;in IF_AST
+$D1:
 end:
 	lw  $ra, 28($sp)
 	addi  $sp, $sp, 32
@@ -310,8 +94,5 @@ $EXIT:
  	jr   $ra 	;in Pro_AST 
  	nop 
 	.data   0x10004000 	;in Decl_AST 
-fizz:	.word  0x0000 	;in DEFINE_AST 
-buzz:	.word  0x0000 	;in DEFINE_AST 
-fizzbuzz:	.word  0x0000 	;in DEFINE_AST 
-others:	.word  0x0000 	;in DEFINE_AST 
+N:	.word  0x0000 	;in DEFINE_AST 
 i:	.word  0x0000 	;in DEFINE_AST 
