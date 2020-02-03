@@ -27,15 +27,27 @@ main:
 
 	addi  $sp, $sp, -32
 	sw  $ra, 28($sp)
-	li  $v0, 3
-	sw  $v0, 0($sp)
-	li   $t0, N
-	sw   $v0, 0($t0)
 	li  $v0, 0
 	sw  $v0, 0($sp)
-	li   $t0, i
+	li   $t0, a
 	sw   $v0, 0($t0)
-	li  $t0, N
+	li  $v0, 1
+	sw  $v0, 0($sp)
+	li   $t0, b
+	sw   $v0, 0($t0)
+	li  $v0, 3
+	sw  $v0, 0($sp)
+	li   $t0, n
+	sw   $v0, 0($t0)
+	li  $v0, 5
+	sw  $v0, 0($sp)
+	li   $t0, n
+	sw   $v0, 4($t0)
+	li  $v0, 7
+	sw  $v0, 0($sp)
+	li   $t0, n
+	sw   $v0, 8($t0)
+	li  $t0, a
 	lw  $v0, 0($t0)
 	nop
 	sw  $v0, 0($sp)
@@ -44,49 +56,75 @@ main:
 	lw  $t0, 0($sp)
 	lw  $t1, 4($sp)
 	nop
-	bne   $t0,$t1,$D0 	;in IF_AST 
-	li  $t0, i
-	lw  $v0, 0($t0)
-	nop
-	sw  $v0, 8($sp)
-	li  $v0, 0
-	sw  $v0, 12($sp)
-	lw  $t0, 8($sp)
-	lw  $t1, 12($sp)
-	nop
-	bne   $t0,$t1,$D0 	;in IF_AST 
-	li  $t0, i
-	lw  $v0, 0($t0)
-	nop
-	sw  $v0, 16($sp)
-	li  $v0, 1
-	sw  $v0, 20($sp)
-	lw  $t0, 16($sp)
-	lw  $t1, 20($sp)
-	nop
 	add  $v0, $t0, $t1
-	sw  $v0, 16($sp)
-	li   $t0, i
+	sw  $v0, 0($sp)
+	li   $t0, a
 	sw   $v0, 0($t0)
-	nop 	;in IF_AST
-$D0_0: 	;in IF_AST
-$D0:
-	li  $t0, N
+	li  $t0, a
 	lw  $v0, 0($t0)
 	nop
 	sw  $v0, 0($sp)
-	li  $v0, 1
+	la  $t0,n
+	lw  $v0, 0($t0)
+	nop
+	sw  $v0,4($sp)
+	lw  $t0, 0($sp)
+	lw  $t1, 4($sp)
+	nop
+	mult  $t0, $t1
+	mflo  $v0
+	sw  $v0, 0($sp)
+	li  $t0, b
+	lw  $v0, 0($t0)
+	nop
 	sw  $v0, 4($sp)
+	lw  $t0, 0($sp)
+	lw  $t1, 4($sp)
+	nop
+	sub  $v0, $t0, $t1
+	nop
+	sw  $v0, 0($sp)
+	li   $t0, b
+	sw   $v0, 0($t0)
+	la  $t0,n
+	lw  $v0, 0($t0)
+	nop
+	sw  $v0,0($sp)
+	la  $t0,n
+	lw  $v0, 4($t0)
+	nop
+	sw  $v0,4($sp)
 	lw  $t0, 0($sp)
 	lw  $t1, 4($sp)
 	nop
 	add  $v0, $t0, $t1
 	sw  $v0, 0($sp)
-	li   $t0, N
+	li  $v0, 2
+	sw  $v0, 4($sp)
+	lw  $t0, 0($sp)
+	lw  $t1, 4($sp)
+	nop
+	div  $t0, $t1
+	mflo  $v0
+	sw  $v0, 0($sp)
+	li   $t0, n
 	sw   $v0, 0($t0)
-	nop 	;in IF_AST
-$D0_1: 	;in IF_AST
-$D1:
+	la  $t0,n
+	lw  $v0, 8($t0)
+	nop
+	sw  $v0,0($sp)
+	la  $t0,n
+	lw  $v0, 4($t0)
+	nop
+	sw  $v0,4($sp)
+	lw  $t0, 0($sp)
+	lw  $t1, 4($sp)
+	nop
+	div  $t0, $t1
+	mfhi  $v0
+	sw  $v0, 0($sp)
+	li   $t0, n
+	sw   $v0, 4($t0)
 end:
 	lw  $ra, 28($sp)
 	addi  $sp, $sp, 32

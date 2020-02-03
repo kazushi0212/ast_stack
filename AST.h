@@ -11,6 +11,7 @@ typedef enum{
 
     IDENT_AST, //変数のノード型
     NUM_AST,  
+    ARRAY_NUM_AST,
 
     Expr_AST,
     Term_AST,
@@ -24,6 +25,10 @@ typedef enum{
     ELSEIF_AST,
 
     ASSIGN_AST,
+    ASSIGN_ARRAY_NUM_AST,
+    ASSIGN_ARRAY_IDENT_AST,
+
+
     ADD_AST,
     SUB_AST,
     MUL_AST,
@@ -33,6 +38,7 @@ typedef enum{
     EQ_AST,
     LT_AST,
     GT_AST,
+    LTE_AST,
 }NType;
 
 typedef struct node{

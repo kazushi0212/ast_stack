@@ -8,6 +8,7 @@ extern int yylex();
 extern int yyerror();
 Node *top, *tmp1, *tmp2, *tmp3, *tmp4,tmp;  //抽象構文木のルートノードへのポインタ、tmp1：追加分，関数の引数の型に合わせるため
 Node *tmp5; //define用
+Node *tmp6,*tmp7; //arrayのassign用
 %}
 %union{
     Node* np;
@@ -17,7 +18,7 @@ Node *tmp5; //define用
 %token DEFINE ARRAY WHILE IF ELSE ELSEIF
 %token SEMIC L_BRACKET R_BRACKET L_PARAM R_PARAM L_BRACE R_BRACE
 %token ASSIGN ADD SUB MUL DIV MOD 
-%token EQ LT GT
+%token EQ LT GT LTE
 
 %token <sp> IDENT
 %token <ival> NUMBER
@@ -41,7 +42,8 @@ statement : assignment_stmt {$$=build_1_child(Stmt_AST,$1);}
 | cond_stmt {$$=build_1_child(Stmt_AST,$1);}
 ;
 assignment_stmt : IDENT ASSIGN expression SEMIC {tmp2=build_ident_node(IDENT_AST,$1); $$=build_child(ASSIGN_AST,tmp2,$3);}
-| IDENT L_BRACKET NUMBER R_BRACKET ASSIGN expression SEMIC {tmp3=build_ident_node(IDENT_AST,$1); tmp4= build_num_node(NUM_AST,$3); $$=build_3_child(ASSIGN_AST,tmp3,tmp4,$6);}  //$3の部分は，varからNUMBER変更
+| IDENT L_BRACKET NUMBER R_BRACKET ASSIGN expression SEMIC {tmp3=build_ident_node(IDENT_AST,$1); tmp4= build_num_node(NUM_AST,$3); $$=build_3_child(ASSIGN_ARRAY_NUM_AST,tmp3,tmp4,$6);}
+| IDENT L_BRACKET IDENT R_BRACKET ASSIGN expression SEMIC {tmp6=build_ident_node(IDENT_AST,$1); tmp7=build_ident_node(IDENT_AST,$3); $$=build_3_child(ASSIGN_ARRAY_IDENT_AST,tmp6,tmp7,$6);}
 ;
 expression : expression ADD term {$$ = build_child(ADD_AST,$1,$3);}
 | expression SUB term {$$ = build_child(SUB_AST,$1,$3);}
@@ -60,7 +62,7 @@ factor : var {$$=build_1_child(Factor_AST,$1);}
 
 var : IDENT {$$ = build_ident_node(IDENT_AST,$1);}
 | NUMBER {$$ = build_num_node(NUM_AST,$1);}
-| IDENT L_BRACKET NUMBER R_BRACKET {$$ = build_array_node(ARRAY_AST,$1,$3);}
+| IDENT L_BRACKET NUMBER R_BRACKET {$$ = build_array_node(ARRAY_NUM_AST,$1,$3);}
 ;
 
 loop_stmt : WHILE L_PARAM condition R_PARAM L_BRACE statements R_BRACE
@@ -85,6 +87,7 @@ ELSEIF L_PARAM condition R_PARAM L_BRACE statements R_BRACE  {$$=build_child(ELS
 condition : expression EQ expression {$$=build_child(EQ_AST,$1,$3);}
 | expression LT expression {$$=build_child(LT_AST,$1,$3);}
 | expression GT expression {$$=build_child(GT_AST,$1,$3);}
+| expression LTE expression {$$=build_child(LTE_AST,$1,$3);}
 ;
 
 

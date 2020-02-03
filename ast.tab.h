@@ -67,8 +67,9 @@ extern int yydebug;
     EQ = 277,
     LT = 278,
     GT = 279,
-    IDENT = 280,
-    NUMBER = 281
+    LTE = 280,
+    IDENT = 281,
+    NUMBER = 282
   };
 #endif
 
@@ -77,14 +78,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 12 "ast.y" /* yacc.c:1909  */
+#line 13 "ast.y" /* yacc.c:1909  */
 
     Node* np;
     int ival;
     char* sp;
  
 
-#line 88 "ast.tab.h" /* yacc.c:1909  */
+#line 89 "ast.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

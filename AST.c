@@ -12,7 +12,7 @@ int else_count=0;
 int if_end_num=0;
 
 int def_num=0; //defineの時に一度だけ.dataを宣言
-
+int LTE_num=0;
 
 Node *build_1_child(NType t,Node *p1){
     Node *p;
@@ -67,6 +67,18 @@ Node *build_4_child(NType t,Node *p1,Node *p2,Node *p3,Node *p4){
 }
 
 
+Node *build_ident_node(NType t,char *str){
+    Node *p;
+    if((p = (Node *)malloc(sizeof(Node))) == NULL){
+        yyerror("out of memory");
+    }
+    p->type=t;
+    p->varName = (char*)malloc(sizeof(char)*strlen(str));
+    strcpy(p->varName,str);
+    p->child = NULL;
+    p->brother = NULL;
+    return p;
+}
 
 Node *build_num_node(NType t,int n){
     Node *p;
@@ -80,19 +92,6 @@ Node *build_num_node(NType t,int n){
     return p;
 }
 
-
-Node *build_ident_node(NType t,char *str){
-    Node *p;
-    if((p = (Node *)malloc(sizeof(Node))) == NULL){
-        yyerror("out of memory");
-    }
-    p->type=t;
-    p->varName = (char*)malloc(sizeof(char)*strlen(str));
-    strcpy(p->varName,str);
-    p->child = NULL;
-    p->brother = NULL;
-    return p;
-}
 
 Node *build_array_node(NType t,char *str,int n){
     Node *p,*p1,*p2;
@@ -182,7 +181,15 @@ void printTree(Node *p,FILE *text_fp,FILE *data_fp){
             fprintf(text_fp,"\tsw  $v0, %d($sp)\n",stack_num*4);
             stack_num++;
             break;
-            
+
+        case ARRAY_NUM_AST:            
+            fprintf(text_fp,"\tla  $t0,%s\n",p->child->varName);                     
+            fprintf(text_fp,"\tlw  $v0, %d($t0)\n\tnop\n",p->child->brother->value*4);
+            fprintf(text_fp,"\tsw  $v0,%d($sp)\n",stack_num*4);
+            stack_num++;
+            break;
+
+
         case Expr_AST:
             checkNode(p,text_fp,data_fp);            
             break;
@@ -200,8 +207,8 @@ void printTree(Node *p,FILE *text_fp,FILE *data_fp){
             printTree(p->brother,text_fp,data_fp);   
             break;
         case ARRAY_AST:
-            printf("ARRAY\n");
-            checkNode(p,text_fp,data_fp);
+            fprintf(data_fp,"%s:\t.space %d \t;in ARRAY_AST \n",p->child->varName,p->child->brother->value);
+            printTree(p->brother,text_fp,data_fp);   
             break;
 	    
 /////WHILE,IF
@@ -210,12 +217,19 @@ void printTree(Node *p,FILE *text_fp,FILE *data_fp){
             fprintf(text_fp,"$L%d_%d:\n",loop_rec,loop_num);
             checkNode(p,text_fp,data_fp);
 
-            if(p->child->type != EQ_AST){
+            if(p->child->type == LT_AST || p->child->type == GT_AST){
                 fprintf(text_fp,"\tbeq   $v0,$zero,$L%d_%d \t;in WHILE_AST \n",loop_rec,loop_num+1);
+                fprintf(text_fp,"\tnop \t\n");
+            }
+            if(p->child->type == LTE_AST){              
+                fprintf(text_fp,"\tj $L%d_%d \t;in WHILE_AST \n",loop_rec,loop_num+1);
+                fprintf(text_fp,"\tnop \t\n");
+                fprintf(text_fp,"$LTE%d:\n",LTE_num-1);
             }
             if(p->child->type == EQ_AST){
                 fprintf(text_fp,"\tbne   $t0,$t1,$L%d_%d \t;in WHILE_AST \n",loop_rec,loop_num+1);
-		stack_num=0;
+                fprintf(text_fp,"\tnop \t\n");
+                stack_num=0;
             }
             loop_rec++;
             printTree(p->child->brother,text_fp,data_fp);
@@ -228,7 +242,6 @@ void printTree(Node *p,FILE *text_fp,FILE *data_fp){
 
 	    
         case IF_AST:
-            //fprintf(text_fp,"!!!!!!!!!!!!!IF\n");
             printTree(p->child,text_fp,data_fp);
       
             if(p->child->type != EQ_AST){
@@ -239,6 +252,8 @@ void printTree(Node *p,FILE *text_fp,FILE *data_fp){
                 fprintf(text_fp,"\tbne   $t0,$t1,$D%d \t;in IF_AST \n",if_num);
                 else_count++;
             }
+
+
             printTree(p->child->brother,text_fp,data_fp);
 	    
             if(p->child->brother->brother!=NULL){   //else if ,elseが存在する時
@@ -253,7 +268,6 @@ void printTree(Node *p,FILE *text_fp,FILE *data_fp){
             break;
 
         case ELSEIF_AST:
-            //fprintf(text_fp,"!!!!!!!!!!!!!ELSEIF\n");
             fprintf(text_fp,"\tj   $D0_%d \t;ELSEIF_AST \n ",if_end_num);
             fprintf(text_fp,"\tnop \n");
             fprintf(text_fp,"$D%d: \t;in ELSEIF_AST \n",if_num);
@@ -264,26 +278,26 @@ void printTree(Node *p,FILE *text_fp,FILE *data_fp){
             if(p->child->type != EQ_AST){
                 if(p->brother !=NULL || else_count!=0){
                     fprintf(text_fp,"\tbeq   $v0,$zero,$D%d \t;in ELSEIF_AST \n ",if_num+1);
+                    fprintf(text_fp,"\tnop \t;in ELSEIF\n");
                     else_count++;
                 } else {
                     fprintf(text_fp,"\tbeq   $v0,$zero,$D0 \t;in ELSEIF_AST \n ");
+                    fprintf(text_fp,"\tnop \t;in ELSEIF_AST\n");
                 }
             }
             if(p->child->type == EQ_AST){
                 if(p->brother !=NULL || else_count!=0){
                 fprintf(text_fp,"\tbne   $t0,$t1,$D%d \t;in ELSEIF_AST\n ",if_num+1);
+                fprintf(text_fp,"\tnop \t;in ELSEIF_AST\n");
                 else_count++;
                 } else{
                     fprintf(text_fp,"\tbne   $t0,$t1,$D0_%d \t;in ELSEIF_AST\n ",if_end_num);
+                    fprintf(text_fp,"\tnop \t;in ELSEIF_AST\n");
                 }
             }    
             if_num++;
             printTree(p->child->brother,text_fp,data_fp);
-/*
-            if(p->child->brother->brother!=NULL){  //elseifが複数個ある可能性
-                printTree(p->child->brother->brother,text_fp,data_fp);
-            }
-*/
+
             if(p->brother!=NULL){
                 printTree(p->brother,text_fp,data_fp);
             }
@@ -305,7 +319,27 @@ void printTree(Node *p,FILE *text_fp,FILE *data_fp){
             fprintf(text_fp,"\tsw   $v0, 0($t0)\n");
             stack_num = 0;
             break;
-	    
+
+        case ASSIGN_ARRAY_NUM_AST:
+            checkNode(p->child->brother,text_fp,data_fp);
+            fprintf(text_fp,"\tli   $t0, %s\n",p->child->varName);
+            fprintf(text_fp,"\tsw   $v0, %d($t0)\n",p->child->brother->value*4);
+            stack_num = 0;
+            break;
+
+       case ASSIGN_ARRAY_IDENT_AST:
+            checkNode(p->child->brother,text_fp,data_fp);
+            fprintf(text_fp,"\tli   $t0, %s\n",p->child->varName);
+            fprintf(text_fp,"\tli   $t1, %s\n",p->child->brother->varName);
+            fprintf(text_fp,"\tlw   $t2, 0($t1)\n");
+            fprintf(text_fp,"\tli   $t3, 4\n");
+            fprintf(text_fp,"\tmult   $t2, $t3\n");
+            fprintf(text_fp,"\tmflo  $t4\n");
+            fprintf(text_fp,"\tadd   $t0,$t0,$t4\n");
+            fprintf(text_fp,"\tsw   $v0, 0($t0)\n");
+            stack_num = 0;
+            break;
+
         case ADD_AST:
             checkNode(p,text_fp,data_fp);
             fprintf(text_fp,"\tlw  $t0, %d($sp)\n",(stack_num-2)*4);
@@ -362,36 +396,46 @@ void printTree(Node *p,FILE *text_fp,FILE *data_fp){
 
 //比較
         case EQ_AST:
-	  checkNode(p->child,text_fp,data_fp);
-	  fprintf(text_fp,"\tlw  $t0, %d($sp)\n",(stack_num-2)*4);
-	  fprintf(text_fp,"\tlw  $t1, %d($sp)\n\tnop\n",(stack_num-1)*4);
-	  
-	  break;
-
+            checkNode(p->child,text_fp,data_fp);
+            fprintf(text_fp,"\tlw  $t0, %d($sp)\n",(stack_num-2)*4);
+            fprintf(text_fp,"\tlw  $t1, %d($sp)\n\tnop\n",(stack_num-1)*4);	  
+            break;
+            
         case LT_AST:
-          fprintf(text_fp,";LT_AST1\n");
-          checkNode(p->child,text_fp,data_fp);
-          fprintf(text_fp,";LT_AST2\n");
-          fprintf(text_fp,"\tlw  $t0, %d($sp)\n",(stack_num-2)*4);
-          fprintf(text_fp,"\tlw  $t1, %d($sp)\n\tnop\n",(stack_num-1)*4);
-          fprintf(text_fp,"\tslt   $v0,$t0,$t1\n");
-          stack_num=0;
-          break;
-
+            checkNode(p->child,text_fp,data_fp);
+            fprintf(text_fp,"\tlw  $t0, %d($sp)\n",(stack_num-2)*4);
+            fprintf(text_fp,"\tlw  $t1, %d($sp)\n\tnop\n",(stack_num-1)*4);
+            fprintf(text_fp,"\tslt   $v0,$t0,$t1\n");
+            stack_num=0;
+            break;
+            
         case GT_AST:
-	  checkNode(p->child,text_fp,data_fp);
-	  fprintf(text_fp,"\tlw  $t0, %d($sp)\n",(stack_num-2)*4);
-	  fprintf(text_fp,"\tlw  $t1, %d($sp)\n\tnop\n",(stack_num-1)*4);
-	  fprintf(text_fp,"\tslt   $v0,$t1,$t0\n");
-	  stack_num=0;
-	  break;
+            checkNode(p->child,text_fp,data_fp);
+            fprintf(text_fp,"\tlw  $t0, %d($sp)\n",(stack_num-2)*4);
+            fprintf(text_fp,"\tlw  $t1, %d($sp)\n\tnop\n",(stack_num-1)*4);
+            fprintf(text_fp,"\tslt   $v0,$t1,$t0\n");
+            stack_num=0;
+            break;
+            
 
+        case LTE_AST:
+            checkNode(p->child,text_fp,data_fp);
+            fprintf(text_fp,"\tlw  $t0, %d($sp)\n",(stack_num-2)*4);
+            fprintf(text_fp,"\tlw  $t1, %d($sp)\n\tnop\n",(stack_num-1)*4);
+            fprintf(text_fp,"\tbeq   $t0,$t1,$LTE%d\t;in LTE_AST \n",LTE_num);
+            fprintf(text_fp,"\tnop \t;in LTE_AST\n");
+            fprintf(text_fp,"\tslt   $v0,$t0,$t1\n");
+            fprintf(text_fp,"\tbne   $v0,$zero,$LTE%d \t;in LET_AST \n",LTE_num);
+            fprintf(text_fp,"\tnop \t;in LTE_AST\n");
+            stack_num=0;
+            LTE_num++;
+            break;
 /*
 case LET_AST:
 先にイコールの判定をしてOKならwhileの処理にジャンプ，つぎに＜の判定をしてOKならwhileの処理にジャンプ
 whileにLET_ASTようの処理を追加し，判定前に$v0に1を入れておき，判定が正解なら1がはいり，不正解なら0がはいるので，whileでその判定を行う．
-
 */
+
         default :
             fprintf(stderr,"print error\n");
         }

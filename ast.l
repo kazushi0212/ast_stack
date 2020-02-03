@@ -26,6 +26,7 @@
 "=="  return EQ;
 "<"  return LT;
 ">"  return GT;
+"<=" return LTE;
 [0-9]+  {yylval.ival = atoi(yytext); return NUMBER;}
 [a-zA-Z][a-zA-Z0-9]*  {yylval.sp=strdup(yytext); return IDENT;}
 [ \t\n]  ; /*ignore space*/

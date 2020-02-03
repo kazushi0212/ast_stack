@@ -1,12 +1,15 @@
-define N;
-define i;
+define a;
+define b;
 
-N = 3;
-i = 0;
+array n[3];
 
-if(N==2){
-    if(i==0){
-        i=i+1;
-    }
-    N=N+1;
-}
+a=0; 
+b=1;
+n[0]=3;
+n[1]=5;
+n[2]=7;
+
+a=a+2;
+b=a*n[0]-b;
+n[0]=(n[0]+n[1])/2;
+n[1]=n[2]%n[1];

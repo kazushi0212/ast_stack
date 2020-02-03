@@ -6,6 +6,12 @@
 #test.asm#
 .nfs0000000067dac1eb0000003a
 .#ast.y
+lex.yy.*
+
+
+ast.tab.*
+data.asm
+text.asm
 
 answer.asm
 
